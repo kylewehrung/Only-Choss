@@ -1,4 +1,4 @@
-from flask import request, session, make_response
+from flask import request, session, make_response, abort
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 
@@ -40,13 +40,17 @@ api.add_resource(Signup, "/signup")
 
 class CheckSession(Resource):
     def get(self):
-        if session.get["user_id"]:
-            user = User.query.filter(User.id == session["user_id"]).first()
-            return user.to_dict(), 200
-        return {"error": "401 Unauthorized"}, 401
+        try:
+            user = User.query.filter_by(id=session['user_id']).first()
+            response = make_response(
+                user.to_dict(),
+                200
+            )
+            return response
+        except:
+            abort(401, "Unauthorized")
     
 api.add_resource(CheckSession, "/check_session")
-
 
 
 
