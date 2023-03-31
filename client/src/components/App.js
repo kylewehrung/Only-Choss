@@ -68,7 +68,7 @@ function App() {
 
   return (
 	<AppWrapper>
-		<NavBar user={user} setUser={setUser} />
+		{/* <NavBar user={user} setUser={setUser} /> */}
 		<MainContainer>
 			<Switch>
 				<Route path="/locations">
@@ -79,11 +79,6 @@ function App() {
 	</AppWrapper>
   );
 }
-
-
-
-
-
 
 
 

@@ -3,7 +3,7 @@ from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 
 from config import app, db, api
-from models import User
+from models import User, Location
 
 
 class Signup(Resource):
@@ -90,7 +90,28 @@ class Logout(Resource):
         return {"error": "401 Unauthorized"}, 401
     
 api.add_resource(Logout, "/logout")
-        
+
+
+
+
+
+class Locations(Resource):
+
+    def get(self):
+        location_list = [location.to_dict() for location in Location.query.all()]
+        return make_response(
+            location_list,
+            200
+        )
+    
+api.add_resource(Locations, "/locations")
+
+
+
+
+
+
+
 
 
 
