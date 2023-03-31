@@ -11,10 +11,11 @@ import BoulderList from "./BoulderList";
 import AddChoss from "./AddChoss";
 
 
+
 function App() {
 
 	const [user, setUser] = useState(null);
-	const [showLogin, setShowLogin] = useState(true)
+	const [showLogin, setShowLogin] = useState(true);
 	const history = useHistory();
 
 	useEffect(() => {
@@ -41,8 +42,8 @@ function App() {
 					<LoginForm onLogin={handleLogin} />
 					<Divider />
 					<p>
-						Not an Only Choss member? 
-						<Button color="secondary" oncClick={() => setShowLogin(false)}>
+						Not an Only Choss member? &nbsp;
+						<Button color="secondary" onClick={() => setShowLogin(false)}>
 							Sign Up
 						</Button>
 					</p>
@@ -52,7 +53,7 @@ function App() {
 					<SignUpForm onLogin={handleLogin} />
 					<Divider />
 					<p>
-						Already a Choss Member?
+						Already a Choss Member? &nbsp;
 						<Button color="secondary" onClick={() => setShowLogin(true)} >
 							Log In
 						</Button>

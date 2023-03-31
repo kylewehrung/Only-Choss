@@ -19,6 +19,7 @@ class Signup(Resource):
         new_user = User(
             username=username,
         )
+        
         new_user.password_hash = password
 
         try: 
