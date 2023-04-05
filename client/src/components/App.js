@@ -1,25 +1,167 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import { Switch, Route, useHistory } from "react-router-dom";
+import styled, { keyframes } from "styled-components";
+// import backgroundGif from "../images/background.gif";
+import { Button } from "../styles";
+import Home from "./Home";
+import NavBar from "./NavBar";
+import LoginForm from "./LoginForm";
+import SignUpForm from "./SignUpForm";
+import BoulderList from "./BoulderList";
+import AddChoss from "./AddChoss";
+
 
 function App() {
+
+	const [user, setUser] = useState(null);
+	const [showLogin, setShowLogin] = useState(true)
+	const history = useHistory();
+
+	useEffect(() => {
+		fetch("/check_session").then((r) => {
+			if (r.ok) {
+				r.json().then((user) => setUser(user));
+			}
+		});
+	}, []);
+
+
+	const handleLogin = (user) => {
+		setUser(user);
+		history.push("/locations"); //locations?? idk
+	};
+
+
+
+	if (!user) return (
+		<Wrapper>
+			<Logo>Only Choss</Logo>
+			{showLogin ? (
+				<>
+					<LoginForm onLogin={handleLogin} />
+					<Divider />
+					<p>
+						Not an Only Choss member? 
+						<Button color="secondary" oncClick={() => setShowLogin(false)}>
+							Sign Up
+						</Button>
+					</p>
+				</>
+			) : (
+				<>
+					<SignUpForm onLogin={handleLogin} />
+					<Divider />
+					<p>
+						Already a Choss Member?
+						<Button color="secondary" onClick={() => setShowLogin(true)} >
+							Log In
+						</Button>
+					</p>
+				</>
+			)}
+		</Wrapper>
+	);
+
+
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+	<AppWrapper>
+		<NavBar user={user} setUser={setUser} />
+		<MainContainer>
+			<Switch>
+				<Route path="/locations">
+					<Home user={user} />
+				</Route>
+			</Switch>
+		</MainContainer>
+	</AppWrapper>
   );
 }
+
+
+
+
+
+
+
+
+
+//App styles:
+
+const animation = keyframes`
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+`;
+const MainContainer = styled.main`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  ${'' /* background-image: url(${backgroundGif}); */}
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  height: 100%;
+  width: 100vw;
+  animation: ${animation} 20s linear infinite;
+  background-attachment: fixed;
+`;
+
+const AppWrapper = styled.div`
+  height: 100%;
+  ${'' /* background-image: url(${backgroundGif}); */}
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  opacity: 0.9;
+`;
+
+
+
+//Login styles:
+
+const Logo = styled.h1`
+  font-family: 'Press Start 2P', cursive;
+  font-size: 3rem;
+  color: #4E79D4;
+  margin: 0;
+`;
+
+const Wrapper = styled.section`
+  height: 100vh;
+  ${'' /* background-image: url(${loginGif}); */}
+  background-repeat: no-repeat;
+  background-size: cover; /* cover entire background */
+  background-position: center; /* center the image */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.9;
+  overflow: hidden; /* hide any overflow content, including the white border */
+
+  & > form {
+    position: relative;
+    width: 400px;
+    margin-top: 30px;
+  }
+
+  & > p {
+    color: #fff; /* change font color to white */
+  }
+`;
+
+const Divider = styled.hr`
+  border: none;
+  border-bottom: 1px solid #ccc;
+  margin: 16px 0;
+`;
+
+
+
 
 export default App;
