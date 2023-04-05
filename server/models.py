@@ -24,13 +24,13 @@ class User(db.Model, SerializerMixin):
 
     
 
-    @validates("username")
-    def validate_username(self, key, name):
-        if not name:
-            raise ValueError("Username must exist")
-        elif name in name:
-            raise ValueError("Username must be unique")
-        return name
+    # @validates("username")
+    # def validate_username(self, key, name):
+    #     if not name:
+    #         raise ValueError("Username must exist")
+    #     elif name in name:
+    #         raise ValueError("Username must be unique")
+    #     return name
 
 
     @hybrid_property
