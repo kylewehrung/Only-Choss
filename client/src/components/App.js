@@ -83,11 +83,6 @@ function App() {
 
 
 
-
-
-
-
-
 //App styles:
 
 const animation = keyframes`
