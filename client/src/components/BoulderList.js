@@ -13,7 +13,6 @@ function BoulderList() {
       .then(setBoulders);
   }, [area]);
 
-  console.log(boulders); // add this line to see the boulders array
 
   return (
     <Wrapper>

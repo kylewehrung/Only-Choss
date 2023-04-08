@@ -1,9 +1,10 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { Button } from "../styles";
 
 function NavBar({ user, setUser }) {
+  const history = useHistory();
   function handleLogoutClick() {
     fetch("/logout", { method: "DELETE" }).then((r) => {
       if (r.ok) {
@@ -21,6 +22,9 @@ function NavBar({ user, setUser }) {
         <Link to="/boulders">Only Choss</Link>
       </Logo>
       <Nav>
+        <Button variant="outline" onClick={() => history.goBack()}>
+          Go Back
+        </Button>
         <Button variant="outline" onClick={handleLogoutClick}>
           Logout
         </Button>

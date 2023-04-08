@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Switch, Route, useHistory } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-// import backgroundGif from "../images/background.gif";
 import { Button } from "../styles";
 import Home from "./Home";
 import NavBar from "./NavBar";

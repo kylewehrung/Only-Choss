@@ -111,7 +111,6 @@ function SignUpForm({ onLogin }) {
 
 
 
-
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -124,8 +123,6 @@ const FormFields = styled.div`
 `;
 
 
-
-
 const CustomLabel = styled.label`
   color: #f8f0e3;
   font-size: 2em;
@@ -134,8 +131,6 @@ const CustomLabel = styled.label`
   padding: .1em;
   
 `;
-
-
 
 const WhiteInput = styled(Input)`
   color: black;

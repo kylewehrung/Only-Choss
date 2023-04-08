@@ -1,10 +1,6 @@
-# from faker import Faker
-
 
 from app import app
 from models import db, Boulder, User
-
-# fake = Faker()
 
 with app.app_context():   
     Boulder.query.delete()
@@ -34,7 +30,6 @@ with app.app_context():
             area = areas[i],
         )
         boulders.append(boulder)
-        # boulder.location = locations[i]
 
         
     db.session.add_all(boulders)
