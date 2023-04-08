@@ -28,10 +28,10 @@ with app.app_context():
 
 
     boulders = []
-    names = ["one", "two", "three", "four", "five", "six", "seven"]
-    grades = ["one", "two", "three", "four", "five", "six", "seven"]
-    ratings = [1, 2, 3, 4, 5, 6, 7]
-    descriptions = ["one", "two", "three", "four", "five", "six", "seven"]
+    names = ["Kahuna Roof", "Penny Pinch", "French Arete", "Desert Eagle", "Moulin Rouge", "The Game", "Kelly Roof"]
+    grades = ["V6", "V3", "V7", "V5", "V10", "V15", "V6"]
+    ratings = [3, 3, 3, 2, 2, 1, 3]
+    descriptions = ["Ouchie", "Spraypainted", "Contrived", "Crumbly", "Bad fall zone", "Too hard", "Hold broke?"]
     images = ["one", "two", "three", "four", "five", "six", "seven"]
     for i in range(7):
         boulder = Boulder(
@@ -41,10 +41,10 @@ with app.app_context():
             description = descriptions[i],
             image = images[i],
         )
+        boulders.append(boulder)
         
-    boulder.location = locations[i]
-    boulders.append(boulder)
 
+    boulder.location = locations[i]
     db.session.add_all(boulders)
     db.session.commit()
 
