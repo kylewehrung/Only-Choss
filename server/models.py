@@ -77,7 +77,7 @@ class Boulder(db.Model, SerializerMixin):
 
 class Location(db.Model, SerializerMixin):
     __tablename__ = "locations"
-    # serialize_rules = ("-")
+    serialize_rules = ("-boulders",)
 
     id = db.Column(db.Integer, primary_key=True)
     state = db.Column(db.String)
