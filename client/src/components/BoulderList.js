@@ -6,24 +6,19 @@ import Table from "react-bootstrap/Table";
 
 
 function BoulderList() {
-    const [boulders, setBoulders] = useState([])
-    const { area } = useParams()
-
-
+    const [boulders, setBoulders] = useState([]);
+    const { area } = useParams();
+  
     useEffect(() => {
-        fetch(`/boulders/${area}`)
+      fetch(`/boulders/${area}`)
         .then((r) => r.json())
-        .then(setBoulders)
-    }, [area])
-
-
+        .then(setBoulders);
+    }, [area]);
+  
     return (
-       <div className="boulder-list-background">
+      <div className="boulder-list-background">
         <h1 className="header">Boulders in {area}</h1>
-        {boulders.map((boulder) => (
-        <div key={boulder.id} >
-        <Table striped bordered hover variant="light"
-        className="table">
+        <Table striped bordered hover variant="light" className="table">
           <thead>
             <tr>
               <th>Name</th>
@@ -32,37 +27,21 @@ function BoulderList() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>{boulder.name}</td>
-              <td>{boulder.grade}</td>
-              <td>{boulder.rating}</td>
-            </tr>
-            <tr>
-              <td>{boulder.name}</td>
-              <td>{boulder.grade}</td>
-              <td>{boulder.rating}</td>
-            </tr>
-            <tr>
-              <td>{boulder.name}</td>  
-              <td >{boulder.grade}</td>
-              <td>{boulder.rating}</td>
-            </tr>
+            {boulders.map((boulder) => (
+              <tr key={boulder.id}>
+                <td>{boulder.name}</td>
+                <td>{boulder.grade}</td>
+                <td>{boulder.rating}</td>
+              </tr>
+            ))}
+           
           </tbody>
         </Table>
-            </div>
-        ))}
-        </div>
-
-
-      );
-
-
-    }
-    
-    
-
-
-export default BoulderList;
-
+      </div>
+    );
+  }
+  
+  export default BoulderList;
+  
 
 
