@@ -18,20 +18,45 @@ function BoulderList() {
 
 
     return (
-
-        <div className="basic">
-          <h1>Boulders in {area}</h1>
-          {boulders.map((boulder) => (
-            <div key={boulder.id}>
-              <h2>{boulder.name}</h2>
-              <p>Grade: {boulder.grade}</p>
-              <p>Rating: {boulder.rating}</p>
-              <p>Description: {boulder.description}</p>
-              <img src={boulder.image} alt={boulder.name} />
+       <div className="boulder-list-background">
+        <h1 className="header">Boulders in {area}</h1>
+        {boulders.map((boulder) => (
+        <div key={boulder.id} >
+        <Table striped bordered hover variant="light"
+        className="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Grade</th>
+              <th>Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{boulder.name}</td>
+              <td>{boulder.grade}</td>
+              <td>{boulder.rating}</td>
+            </tr>
+            <tr>
+              <td>{boulder.name}</td>
+              <td>{boulder.grade}</td>
+              <td>{boulder.rating}</td>
+            </tr>
+            <tr>
+              <td>{boulder.name}</td>  
+              <td >{boulder.grade}</td>
+              <td>{boulder.rating}</td>
+            </tr>
+          </tbody>
+        </Table>
             </div>
-          ))}
+        ))}
         </div>
+
+
       );
+
+
     }
     
     
