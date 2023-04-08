@@ -29,9 +29,9 @@ function BoulderList() {
           <tbody>
             {boulders.map((boulder) => (
               <tr key={boulder.id}>
-                <td>{boulder.name}</td>
-                <td>{boulder.grade}</td>
-                <td>{boulder.rating}</td>
+                <td onClick={() => console.log(`Clicked ${boulder.name}`)}>{boulder.name}</td>
+                <td onClick={() => console.log(`Clicked ${boulder.grade}`)}>{boulder.grade}</td>
+                <td onClick={() => console.log(`Clicked ${boulder.rating}`)}>{boulder.rating}</td>
               </tr>
             ))}
            

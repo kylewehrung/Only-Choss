@@ -42,13 +42,13 @@ function NavBar({ user, setUser }) {
   left: 0;
   right: 0;
   z-index: 999;
-  background-color: rgba(255,255,255,0.8)
+  ${'' /* background-color: rgba(111,111,111,0.8) */}
 `;
 
 const Logo = styled.h1`
   font-family: 'cascadia';
   font-size: 2.8rem;
-  color: black;
+  color: #f8f0e3;
   margin: 0;
   line-height: 1;
 
