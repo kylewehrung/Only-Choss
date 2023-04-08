@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Box, Button } from "../styles";
+import Table from "react-bootstrap/Table";
 
 
 function BoulderList() {
@@ -17,6 +18,7 @@ function BoulderList() {
 
 
     return (
+
         <div className="basic">
           <h1>Boulders in {area}</h1>
           {boulders.map((boulder) => (
