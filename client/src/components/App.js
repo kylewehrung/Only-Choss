@@ -8,6 +8,7 @@ import NavBar from "./NavBar";
 import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
 import BoulderList from "./BoulderList";
+import BoulderPage from "./BoulderPage";
 import AddChoss from "./AddChoss";
 
 
@@ -73,6 +74,9 @@ function App() {
 		<NavBar user={user} setUser={setUser} />
 		<MainContainer>
 			<Switch>
+				<Route path="/boulders/:area/:boulderId">
+					<BoulderPage />
+				</Route>
 				<Route path="/boulders/:area">
 					<BoulderList />
 				</Route>
