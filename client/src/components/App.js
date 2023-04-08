@@ -108,7 +108,7 @@ const AppWrapper = styled.div`
 const Logo = styled.h1`
   font-family: 'cascadia';
   font-size: 4rem;
-  color: #222;
+  color: #f8f0e3;
   position: absolute;
   top: 25px;
 `;

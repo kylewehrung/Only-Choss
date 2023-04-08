@@ -125,10 +125,10 @@ const FormFields = styled.div`
 
 
 const CustomLabel = styled.label`
-  color: #222;
+  color: #f8f0e3;
   font-size: 2em;
   font-family: "cascadia";
-  background-color: rgba(255, 255, 255, 0.5);
+  ${'' /* background-color: rgba(255, 255, 255, 0.5); */}
   padding: .1em;
   
 `;
