@@ -13,7 +13,6 @@ function Home() {
     fetch("/boulders")
       .then((r) => r.json())
       .then(setBoulderLocations)
-      console.log("help me")
   }, []);
 
 
@@ -28,17 +27,18 @@ function Home() {
             <MDBDropdownItem key={state}>
               <MDBDropdownLink href="#">{state} &raquo;</MDBDropdownLink>
               <ul className="dropdown-menu dropdown-submenu">
-                {[...new Set(boulderLocations.filter(loc => loc.state === state).map(loc => loc.region))].map((region) => (
-                  <MDBDropdownItem key={region}>
+              {[...new Set(boulderLocations.filter(loc => loc.state === state).map(loc => loc.region))].map((region) => (
+                <MDBDropdownItem key={region}>
                     <MDBDropdownLink href="#">{region} &raquo;</MDBDropdownLink>
                     <ul className="dropdown-menu dropdown-submenu">
-                      {boulderLocations
+                    {boulderLocations
                         .filter(
-                          (loc) =>
+                        (loc) =>
                             loc.state === state && loc.region === region
                         )
+                        .filter((loc, index, self) => self.findIndex(l => l.area === loc.area) === index) // I would not have gotten this on my own, wild stuff.
                         .map((loc) => (
-                          <MDBDropdownItem key={loc.area}>
+                        <MDBDropdownItem key={loc.area}>
                             <MDBDropdownLink 
                             onClick={() => {
                                 console.log(`Clicked ${loc.area}`)
@@ -46,11 +46,12 @@ function Home() {
                             }
                             >
                             {loc.area}</MDBDropdownLink>
-                          </MDBDropdownItem>
+                        </MDBDropdownItem>
                         ))}
                     </ul>
-                  </MDBDropdownItem>
+                </MDBDropdownItem>
                 ))}
+
               </ul>
             </MDBDropdownItem>
           ))}

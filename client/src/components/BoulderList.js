@@ -8,7 +8,7 @@ function BoulderList() {
     const [boulders, setBoulders] = useState([])
     const { area } = useParams()
 
-    console.log("Hello")
+
     useEffect(() => {
         fetch(`/boulders/${area}`)
         .then((r) => r.json())
@@ -17,7 +17,7 @@ function BoulderList() {
 
 
     return (
-        <div>
+        <div className="basic">
           <h1>Boulders in {area}</h1>
           {boulders.map((boulder) => (
             <div key={boulder.id}>
