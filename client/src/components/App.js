@@ -31,7 +31,7 @@ function App() {
 
 	const handleLogin = (user) => {
 		setUser(user);
-		history.push("/locations"); //locations?? idk
+		history.push("/boulders");
 	};
 
 
@@ -73,7 +73,7 @@ function App() {
 		<NavBar user={user} setUser={setUser} />
 		<MainContainer>
 			<Switch>
-				<Route path="/locations">
+				<Route path="/boulders">
 					<Home user={user} />
 				</Route>
 				<Route path="/boulders/:area">

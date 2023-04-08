@@ -8,8 +8,9 @@ function BoulderList() {
     const [boulders, setBoulders] = useState([])
     const { area } = useParams()
 
+    console.log("Hello")
     useEffect(() => {
-        fetch(`boulders?area=${area}`)
+        fetch(`/boulders/${area}`)
         .then((r) => r.json())
         .then(setBoulders)
     }, [area])

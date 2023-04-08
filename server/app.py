@@ -3,7 +3,7 @@ from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 
 from config import app, db, api
-from models import User, Location, Boulder
+from models import User, Boulder
 
 
 class Signup(Resource):
@@ -95,18 +95,6 @@ api.add_resource(Logout, "/logout")
 
 
 
-class Locations(Resource):
-
-    def get(self):
-        location_list = [location.to_dict() for location in Location.query.all()]
-        return make_response(
-            location_list,
-            200
-        )
-    
-api.add_resource(Locations, "/locations")
-
-
 
 
 
@@ -114,20 +102,16 @@ class Boulders(Resource):
 
     def get(self):
         boulders = [boulder.to_dict() for boulder in Boulder.query.all()]
-
         return make_response(boulders, 200)
-    
-    def get_boulders(self):
-        area = request.args.get("area")
-        boulders = Boulder.query.join(Location).filter(Location.area == area).all()
+
+class BoulderByArea(Resource):
+
+    def get(self, area):
+        boulders = Boulder.query.filter(Boulder.area == area).all()
         return make_response([boulder.to_dict() for boulder in boulders], 200)
 
-   
-    
-
+api.add_resource(BoulderByArea, "/boulders/<string:area>")
 api.add_resource(Boulders, "/boulders")
-
-
 
 
 

@@ -6,17 +6,18 @@ import { Box } from "../styles";
 import { MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBDropdownItem, MDBDropdownLink, MDBContainer } from 'mdb-react-ui-kit';
 
 function Home() {
-  const [locations, setLocations] = useState([]);
+  const [boulderLocations, setBoulderLocations] = useState([]);
   const history = useHistory();
 
   useEffect(() => {
-    fetch("/locations")
+    fetch("/boulders")
       .then((r) => r.json())
-      .then(setLocations);
+      .then(setBoulderLocations)
+      console.log("help me")
   }, []);
 
 
-  const uniqueStates = [...new Set(locations.map((location) => location.state))];
+  const uniqueStates = [...new Set(boulderLocations.map((location) => location.state))];
 
   return (
     <MDBContainer className="d-flex justify-content-center mt-5 basic">
@@ -27,11 +28,11 @@ function Home() {
             <MDBDropdownItem key={state}>
               <MDBDropdownLink href="#">{state} &raquo;</MDBDropdownLink>
               <ul className="dropdown-menu dropdown-submenu">
-                {[...new Set(locations.filter(loc => loc.state === state).map(loc => loc.region))].map((region) => (
+                {[...new Set(boulderLocations.filter(loc => loc.state === state).map(loc => loc.region))].map((region) => (
                   <MDBDropdownItem key={region}>
                     <MDBDropdownLink href="#">{region} &raquo;</MDBDropdownLink>
                     <ul className="dropdown-menu dropdown-submenu">
-                      {locations
+                      {boulderLocations
                         .filter(
                           (loc) =>
                             loc.state === state && loc.region === region
@@ -39,7 +40,10 @@ function Home() {
                         .map((loc) => (
                           <MDBDropdownItem key={loc.area}>
                             <MDBDropdownLink 
-                            onClick={() => history.push(`/boulders/${loc.area}`)}
+                            onClick={() => {
+                                console.log(`Clicked ${loc.area}`)
+                                history.push(`/boulders/${loc.area}`)}
+                            }
                             >
                             {loc.area}</MDBDropdownLink>
                           </MDBDropdownItem>

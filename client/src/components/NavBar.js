@@ -17,7 +17,7 @@ function NavBar({ user, setUser }) {
     return (
         <Wrapper>
           <Logo>
-            <Link to="/locations">Only Choss</Link>
+            <Link to="/boulders">Only Choss</Link>
           </Logo>
           <Nav>
             <Button variant="outline" onClick={handleLogoutClick}>
