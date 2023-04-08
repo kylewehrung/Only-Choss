@@ -1,11 +1,13 @@
 import React from 'react';
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { Box } from "../styles";
 import { MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBDropdownItem, MDBDropdownLink, MDBContainer } from 'mdb-react-ui-kit';
 
 function Home() {
   const [locations, setLocations] = useState([]);
+  const history = useHistory();
 
   useEffect(() => {
     fetch("/locations")
@@ -36,7 +38,10 @@ function Home() {
                         )
                         .map((loc) => (
                           <MDBDropdownItem key={loc.area}>
-                            <MDBDropdownLink href="#">{loc.area}</MDBDropdownLink>
+                            <MDBDropdownLink 
+                            onClick={() => history.push("/boulders")}
+                            >
+                            {loc.area}</MDBDropdownLink>
                           </MDBDropdownItem>
                         ))}
                     </ul>

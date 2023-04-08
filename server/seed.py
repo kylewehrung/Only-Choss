@@ -36,11 +36,13 @@ with app.app_context():
 
 
 
+    boulders = []
 
+    bould1 = Boulder(name="Kahuna Roof", grade="V6", rating=3, description="Description: A Colorado choss classic. Nearly every climber in Colorado knows the name of this painful and ever-tipping-over boulder. Start on obvious crimps that have been broken multiple times over the years, try to do the first move without dabbing and continue your way up to an easy topout.", image="https://mountainproject.com/assets/photos/climb/121200125_medium_1629812886.jpg?cache=1629856677")
+    boulders.append(bould1)
 
-
-
-
+    db.session.add_all(boulders)
+    db.session.commit()
 
 
 

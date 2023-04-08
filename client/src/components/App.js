@@ -76,6 +76,9 @@ function App() {
 				<Route path="/locations">
 					<Home user={user} />
 				</Route>
+				<Route path="/boulders">
+					<BoulderList />
+				</Route>
 			</Switch>
 		</MainContainer>
 	</AppWrapper>
