@@ -76,7 +76,7 @@ function App() {
 				<Route path="/locations">
 					<Home user={user} />
 				</Route>
-				<Route path="/boulders">
+				<Route path="/boulders/:area">
 					<BoulderList />
 				</Route>
 			</Switch>

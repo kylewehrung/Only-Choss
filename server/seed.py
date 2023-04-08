@@ -1,6 +1,6 @@
 # from faker import Faker
 
-from random import randint, choice as rc
+
 from app import app
 from models import db, Location, Boulder, User
 
@@ -42,9 +42,9 @@ with app.app_context():
             image = images[i],
         )
         boulders.append(boulder)
-        
+        boulder.location = locations[i]
 
-    boulder.location = locations[i]
+        
     db.session.add_all(boulders)
     db.session.commit()
 
