@@ -3,7 +3,7 @@ import styled from "styled-components";
 const COLORS = {
   primary: {
     "--main": "#4E79D4",
-    "--accent": "white",
+    "--accent": "#f8f0e3",
   },
   secondary: {
     "--main": "lavenderblush",
@@ -36,7 +36,7 @@ const FillButton = styled(ButtonBase)`
   color: var(--accent);
 
   &:hover {
-    opacity: 0.9;
+    opacity: 0.8;
   }
 `;
 

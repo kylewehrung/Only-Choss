@@ -16,7 +16,7 @@ function BoulderList() {
     }, [area]);
   
     return (
-      <div className="boulder-list-background">
+      <Wrapper >
         <h1 className="header">Boulders in {area}</h1>
         <Table striped bordered hover variant="light" className="table">
           <thead>
@@ -37,10 +37,21 @@ function BoulderList() {
            
           </tbody>
         </Table>
-      </div>
+      </Wrapper>
     );
   }
   
+
+
+const Wrapper = styled.div`
+    background-image :url('https://www.color-hex.com/palettes/74642.png');
+    background-position :"center";
+    background-size : "cover";
+    width: 100%;
+    height: 100vh
+`
+
+
   export default BoulderList;
   
 

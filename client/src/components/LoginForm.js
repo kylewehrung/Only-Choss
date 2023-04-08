@@ -4,19 +4,11 @@ import styled from "styled-components";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
-const CustomLabel = styled.label`
-  color: #f8f0e3;
-  font-size: 2em;
-  font-family: "cascadia";
-  ${'' /* background-color: rgba(255, 255, 255, 0.5); */}
-  padding: .1em;
-  
-`;
 
 
 function LoginForm({ onLogin }) {
-
-    const validationSchema = yup.object({
+  
+  const validationSchema = yup.object({
         username: yup.string().required(),
         password: yup.string().required(),
     });
@@ -28,21 +20,21 @@ function LoginForm({ onLogin }) {
         },
         validationSchema, 
         onSubmit: (values, { setErrors, setSubmitting }) => {
-            setSubmitting(true);
-            fetch("/login", {
+          setSubmitting(true);
+          fetch("/login", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                  "Content-Type": "application/json",
                 },
                 body: JSON.stringify(values),
-            })
-            .then((r) => {
+              })
+              .then((r) => {
                 setSubmitting(false);
                 if (r.ok) {
-                    r.json().then((user) => onLogin(user));
+                  r.json().then((user) => onLogin(user));
                 } else {
                     r.json().then((err) => setErrors(err.errors));
-                }
+                  }
             })
             .catch((error) => {
                 setSubmitting(false);
@@ -50,7 +42,7 @@ function LoginForm({ onLogin }) {
             });
         },
     });
-
+    
 
     return (
         <form onSubmit={formik.handleSubmit}>
@@ -89,6 +81,19 @@ function LoginForm({ onLogin }) {
       );
     }
     
+
+
+    
+    const CustomLabel = styled.label`
+      color: #f8f0e3;
+      font-size: 2em;
+      font-family: "cascadia";
+      ${'' /* background-color: rgba(255, 255, 255, 0.5); */}
+      padding: .1em;
+      
+    `;
+
+
 export default LoginForm;
 
 

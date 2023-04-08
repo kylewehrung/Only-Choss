@@ -23,15 +23,6 @@ code {
     monospace;
 }
 
-.boulder-list-background {
-  background-image :url('https://www.color-hex.com/palettes/74642.png');
-  background-position :"center";
-  background-repeat : "no-repeat";
-  background-size : "cover";
-  width: 100%;
-  height: 100vh
-  
-}
 
 
 .header {
@@ -51,6 +42,7 @@ code {
 .basic {
   position: absolute;
   top: 60px;
+  
 
 }
 
