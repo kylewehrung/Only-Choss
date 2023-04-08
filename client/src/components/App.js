@@ -73,11 +73,11 @@ function App() {
 		<NavBar user={user} setUser={setUser} />
 		<MainContainer>
 			<Switch>
-				<Route path="/boulders">
-					<Home user={user} />
-				</Route>
 				<Route path="/boulders/:area">
 					<BoulderList />
+				</Route>
+				<Route path="/boulders">
+					<Home user={user} />
 				</Route>
 			</Switch>
 		</MainContainer>
