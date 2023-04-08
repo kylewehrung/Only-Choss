@@ -23,6 +23,8 @@ function SignUpForm({ onLogin }) {
             password: "",
             passwordConfirmation: "",
         },
+        validateOnChange: false,
+        validateOnBlur: false,
         validationSchema,
         onSubmit: (values, { setErrors, setSubmitting }) => {
             setSubmitting(true)

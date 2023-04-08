@@ -26,7 +26,7 @@ function BoulderPage() {
       <p>Grade: {boulder.grade}</p>
       <p>Rating: {boulder.rating}</p>
       <p>Description: {boulder.description}</p>
-      <p>Image: {boulder.image}</p>
+      <img src={boulder.image} alt="broken boulder" />
     </Wrapper>
   );
 }
