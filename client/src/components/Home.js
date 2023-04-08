@@ -1,65 +1,58 @@
+import React from 'react';
 import { useEffect, useState } from "react";
-// import ReactMarkdown from "react-markdown";
-// import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Box } from "../styles";
+import { MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBDropdownItem, MDBDropdownLink, MDBContainer } from 'mdb-react-ui-kit';
 
+function Home() {
+  const [locations, setLocations] = useState([]);
 
-function Home({ user }) {
-    const [locations, setLocations] = useState([])
-    
-
-    useEffect(() => {
+  useEffect(() => {
     fetch("/locations")
-    .then((r) => r.json())
-    .then(setLocations)
-    }, [])
+      .then((r) => r.json())
+      .then(setLocations);
+  }, []);
 
+  // Get unique values of location state
+  const uniqueStates = [...new Set(locations.map((location) => location.state))];
 
-
-    return (
-
-        <Wrapper>
-            <h1 style={{ fontSize: "2em", fontFamily: "cascadia" }}>Locations</h1>
-            {locations.length > 0 ? (
-                locations.map((location) => (
-                    <Location key={location.id}>
-                        <Box>
-                            <h3>{"Location State: "+location.state}</h3>
-                            <h3>{"Location Region: "+location.region}</h3>
-                            <h3>{"Location Area: "+location.area}</h3>
-                        </Box>
-
-                    </Location>
-                ))
-                ) : (
-                    <>
-                        <h3>No Locations found</h3>
-                    </>
-            )}
-        </Wrapper>
-
-    )
-
-
-
+  return (
+    <MDBContainer className="d-flex justify-content-center mt-5 basic">
+      <MDBDropdown>
+        <MDBDropdownToggle>Select Location</MDBDropdownToggle>
+        <MDBDropdownMenu>
+          {uniqueStates.map((state) => (
+            <MDBDropdownItem key={state}>
+              <MDBDropdownLink href="#">{state} &raquo;</MDBDropdownLink>
+              <ul className="dropdown-menu dropdown-submenu">
+                {[...new Set(locations.filter(loc => loc.state === state).map(loc => loc.region))].map((region) => (
+                  <MDBDropdownItem key={region}>
+                    <MDBDropdownLink href="#">{region} &raquo;</MDBDropdownLink>
+                    <ul className="dropdown-menu dropdown-submenu">
+                      {locations
+                        .filter(
+                          (loc) =>
+                            loc.state === state && loc.region === region
+                        )
+                        .map((loc) => (
+                          <MDBDropdownItem key={loc.area}>
+                            <MDBDropdownLink href="#">{loc.area}</MDBDropdownLink>
+                          </MDBDropdownItem>
+                        ))}
+                    </ul>
+                  </MDBDropdownItem>
+                ))}
+              </ul>
+            </MDBDropdownItem>
+          ))}
+        </MDBDropdownMenu>
+      </MDBDropdown>
+    </MDBContainer>
+  );
 }
-
-
-
-const Wrapper = styled.section`
-  max-width: 800px;
-  margin: 40px auto;
-  transform: translate(0, 4.5%);
-`;
-
-
-const Location = styled.article`
-  margin-bottom: 24px;
-  margin-right: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0, 0.2);
-`;
-
 
 export default Home;
 
+
+
+    

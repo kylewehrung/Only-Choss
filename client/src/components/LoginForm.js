@@ -5,10 +5,14 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 
 const CustomLabel = styled.label`
-color: #222;
-font-size: 2em;
-font-family: "cascadia";
+  color: #222;
+  font-size: 2em;
+  font-family: "cascadia";
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: .1em;
+  
 `;
+
 
 function LoginForm({ onLogin }) {
 

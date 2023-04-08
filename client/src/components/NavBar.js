@@ -17,7 +17,7 @@ function NavBar({ user, setUser }) {
     return (
         <Wrapper>
           <Logo>
-            <Link to="/tickets">Only Choss</Link>
+            <Link to="/locations">Only Choss</Link>
           </Logo>
           <Nav>
             <Button variant="outline" onClick={handleLogoutClick}>
@@ -46,9 +46,9 @@ function NavBar({ user, setUser }) {
 `;
 
 const Logo = styled.h1`
-  font-family: 'Press Start 2P', cursive;
-  font-size: 3rem;
-  color: #4E79D4;
+  font-family: 'cascadia';
+  font-size: 2.8rem;
+  color: black;
   margin: 0;
   line-height: 1;
 

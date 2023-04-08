@@ -56,7 +56,7 @@ function SignUpForm({ onLogin }) {
         <form onSubmit={formik.handleSubmit} >
         <FormFields>
             <FormField>
-                <WhiteLabel htmlFor="username">Username</WhiteLabel>
+                <CustomLabel htmlFor="username">Username</CustomLabel>
                 <WhiteInput
                 type="text"
                 id="username"
@@ -66,7 +66,7 @@ function SignUpForm({ onLogin }) {
                 />
             </FormField>
             <FormField>
-                <WhiteLabel htmlFor="password">Password</WhiteLabel>
+                <CustomLabel htmlFor="password">Password</CustomLabel>
                 <WhiteInput 
                 type="password"
                 id="password"
@@ -76,7 +76,7 @@ function SignUpForm({ onLogin }) {
                 />
             </FormField>
             <FormField>
-                <WhiteLabel htmlFor="passwordConfirmation">Password Confirmation</WhiteLabel>
+                <CustomLabel htmlFor="passwordConfirmation">Password Confirmation</CustomLabel>
                 <WhiteInput 
                 type="password"
                 id="passwordConfirmation"
@@ -121,11 +121,19 @@ const FormFields = styled.div`
   width: 400px;
 `;
 
-const WhiteLabel = styled(Label)`
-  color: #4E79D4;
-  font-size: 2em; 
-  font-family: 'cascadia', cursive;
+
+
+
+const CustomLabel = styled.label`
+  color: #222;
+  font-size: 2em;
+  font-family: "cascadia";
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: .1em;
+  
 `;
+
+
 
 const WhiteInput = styled(Input)`
   color: black;
