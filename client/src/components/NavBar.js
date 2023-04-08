@@ -47,7 +47,7 @@ function NavBar({ user, setUser }) {
 
 const Logo = styled.h1`
   font-family: 'cascadia';
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   color: black;
   margin: 0;
   line-height: 1;

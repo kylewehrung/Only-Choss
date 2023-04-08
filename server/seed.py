@@ -25,6 +25,11 @@ with app.app_context():
     loc4 = Location(state="Colorado", region="Northern Colorado", area="Arthur's Rock")
     locations.append(loc4)
 
+    loc5 = Location(state="Arizona", region="Souther Arizona", area="Air Wolf")
+    locations.append(loc5)
+
+    loc6 = Location(state="Colorado", region="Central Colorado", area="Clear Creek")
+    locations.append(loc6)
 
     db.session.add_all(locations)
     db.session.commit()

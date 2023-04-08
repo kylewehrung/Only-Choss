@@ -87,35 +87,15 @@ function App() {
 
 //App styles:
 
-const animation = keyframes`
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 100% 100%;
-  }
-`;
+
 const MainContainer = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-  ${'' /* background-image: url(${backgroundGif}); */}
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-  height: 100%;
-  width: 100vw;
-  animation: ${animation} 20s linear infinite;
-  background-attachment: fixed;
 `;
 
 const AppWrapper = styled.div`
   height: 100%;
-  ${'' /* background-image: url(${backgroundGif}); */}
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-  opacity: 0.9;
 `;
 
 
@@ -123,10 +103,11 @@ const AppWrapper = styled.div`
 //Login styles:
 
 const Logo = styled.h1`
-  font-family: 'Press Start 2P', cursive;
-  font-size: 3rem;
-  color: #4E79D4;
-  margin: 0;
+  font-family: 'cascadia';
+  font-size: 4rem;
+  color: #222;
+  position: absolute;
+  top: 25px;
 `;
 
 const Wrapper = styled.section`
