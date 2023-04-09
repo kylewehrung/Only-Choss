@@ -15,7 +15,7 @@ function Home() {
       .then(setLocations);
   }, []);
 
-  // Get unique values of location state
+
   const uniqueStates = [...new Set(locations.map((location) => location.state))];
 
   return (
@@ -39,7 +39,7 @@ function Home() {
                         .map((loc) => (
                           <MDBDropdownItem key={loc.area}>
                             <MDBDropdownLink 
-                            onClick={() => history.push("/boulders")}
+                            onClick={() => history.push(`/boulders/${loc.area}`)}
                             >
                             {loc.area}</MDBDropdownLink>
                           </MDBDropdownItem>

@@ -117,11 +117,15 @@ class Boulders(Resource):
 
         return make_response(boulders, 200)
     
+    def get_boulders(self):
+        area = request.args.get("area")
+        boulders = Boulder.query.join(Location).filter(Location.area == area).all()
+        return make_response([boulder.to_dict() for boulder in boulders], 200)
+
+   
     
 
 api.add_resource(Boulders, "/boulders")
-
-
 
 
 

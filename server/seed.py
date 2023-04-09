@@ -1,7 +1,8 @@
 # from faker import Faker
 
+
 from app import app
-from models import db, Location, Boulder, Comment, User
+from models import db, Location, Boulder, User
 
 # fake = Faker()
 
@@ -12,37 +13,41 @@ with app.app_context():
 
 
     locations = []
-
-    loc1 = Location(state="Colorado", region="Northern Colorado", area="Carter Lake")
-    locations.append(loc1)
-
-    loc2 = Location(state="Colorado", region="Northern Colorado", area="Rotary Park")
-    locations.append(loc2)
-
-    loc3 = Location(state="Colorado", region="Northern Colorado", area="Poudre Canyon")
-    locations.append(loc3)
-
-    loc4 = Location(state="Colorado", region="Northern Colorado", area="Arthur's Rock")
-    locations.append(loc4)
-
-    loc5 = Location(state="Arizona", region="Souther Arizona", area="Air Wolf")
-    locations.append(loc5)
-
-    loc6 = Location(state="Colorado", region="Central Colorado", area="Clear Creek")
-    locations.append(loc6)
-
+    states = ["Colorado", "Colorado", "Colorado", "Colorado", "Colorado", "Colorado", "Arizona"]
+    regions = ["Northern Colorado", "Northern Colorado", "Northern Colorado", "Northern Colorado", "Central Colorado", "Central Colorado", "Flagstaff"]
+    areas = ["Carter Lake", "Horsetooth Resovoir", "Poudre Canyon", "Lory State Park", "Clear Creek Canyon", "Eldorado Canyon", "Kelly Canyon"]
+    for i in range(7):
+        location = Location(
+            state = states[i],
+            region = regions[i],
+            area = areas[i],
+        )
+        locations.append(location)
     db.session.add_all(locations)
-    db.session.commit()
 
 
 
     boulders = []
+    names = ["Kahuna Roof", "Penny Pinch", "French Arete", "Desert Eagle", "Moulin Rouge", "The Game", "Kelly Roof"]
+    grades = ["V6", "V3", "V7", "V5", "V10", "V15", "V6"]
+    ratings = [3, 3, 3, 2, 2, 1, 3]
+    descriptions = ["Ouchie", "Spraypainted", "Contrived", "Crumbly", "Bad fall zone", "Too hard", "Hold broke?"]
+    images = ["one", "two", "three", "four", "five", "six", "seven"]
+    for i in range(7):
+        boulder = Boulder(
+            name = names[i],
+            grade = grades[i],
+            rating = ratings[i],
+            description = descriptions[i],
+            image = images[i],
+        )
+        boulders.append(boulder)
+        boulder.location = locations[i]
 
-    bould1 = Boulder(name="Kahuna Roof", grade="V6", rating=3, description="Description: A Colorado choss classic. Nearly every climber in Colorado knows the name of this painful and ever-tipping-over boulder. Start on obvious crimps that have been broken multiple times over the years, try to do the first move without dabbing and continue your way up to an easy topout.", image="https://mountainproject.com/assets/photos/climb/121200125_medium_1629812886.jpg?cache=1629856677")
-    boulders.append(bould1)
-
+        
     db.session.add_all(boulders)
     db.session.commit()
+
 
 
 
