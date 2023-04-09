@@ -145,32 +145,24 @@ class Comments(Resource):
         )
 
 
-
-    def post(self):
+    def post(self, boulder_id):
         data = request.get_json()
-
-       
-        user = User.query.options(subqueryload(User.boulders)).get(data["user_id"]) #I don't understand this
-
-        new_commie = Comment(
-            comment=data["comment"], 
-            user_id=data["user_id"], 
-            boulder_id=data["boulder_id"]
-            )
-        db.session.add(new_commie)
+        comment = Comment(
+            comment=data["comment"],
+            user_id=data["user_id"],
+            boulder_id=boulder_id
+        )
+        db.session.add(comment)
         db.session.commit()
-
         return make_response(
-            {
-                "comment": new_commie.comment,
-                "user": user.to_dict(),
-                "boulder_id": new_commie.boulder_id
-            },
+            comment.to_dict(),
             201
         )
+    
 
 
-api.add_resource(Comments, "/comments/<string:boulder_id>")
+api.add_resource(Comments, "/comments/<int:boulder_id>")
+
 
 
 

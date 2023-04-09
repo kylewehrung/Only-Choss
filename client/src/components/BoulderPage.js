@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -12,62 +13,93 @@ import {
     MDBRow,
   } from "mdb-react-ui-kit";
 
-  function BoulderPage() {
-    const [boulder, setBoulder] = useState({});
-    const [comment, setComment] = useState([]);
-    const { area, boulderId } = useParams();
-  
-    useEffect(() => {
-      fetch(`/boulders/${area}/${boulderId}`)
-        .then((r) => {
-          if (!r.ok) {
-            throw new Error("Failed to fetch boulder data.");
-          }
-          return r.json();
-        })
-        .then(setBoulder)
-        .catch((error) => console.log(error));
-  
+function BoulderPage() {
+  const [boulder, setBoulder] = useState({});
+  const [comment, setComment] = useState([]);
+  const [newComment, setNewComment] = useState(""); 
+  const { area, boulderId } = useParams();
 
-      fetch(`/comments/${boulderId}`)
-        .then((r) => r.json())
-        .then(setComment)
-        .catch((error) => console.log(error));
-    }, [area, boulderId]);
-  
-    return (
-      <StyledWrapper>
-        <Wrapper>
-          <h1>{boulder.name}</h1>
-          <img src={boulder.image} alt="boulders" />
-          <p>Grade: {boulder.grade}</p>
-          <p>Rating: {boulder.rating}</p>
-          <p>Description: {boulder.description}</p>
-        </Wrapper>
-  
-        <MDBContainer className="mt-5" style={{ maxWidth: "1400px" }}>
-          <MDBRow className="justify-content-center">
-            <MDBCol md="8" lg="6">
-              <MDBCard
-                className="shadow-0 border"
-                style={{ backgroundColor: "#fff4ed" }}
-              >
-                <MDBCardBody>
+  useEffect(() => {
+    fetch(`/boulders/${area}/${boulderId}`)
+      .then((r) => {
+        if (!r.ok) {
+          throw new Error("Failed to fetch boulder data.");
+        }
+        return r.json();
+      })
+      .then(setBoulder)
+      .catch((error) => console.log(error));
+
+    fetch(`/comments/${boulderId}`)
+      .then((r) => r.json())
+      .then(setComment)
+      .catch((error) => console.log(error));
+  }, [area, boulderId]);
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetch(`/comments/${boulderId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        comment: newComment,
+        user_id: 1, //need a way to make this dynamic, we'll get that eventually
+        boulder_id: boulderId,
+      }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        setComment([...comment, data]);
+        setNewComment("");
+      })
+      .catch((error) => console.log(error));
+  };
+
+  return (
+    <StyledWrapper>
+      <Wrapper>
+        <h1>{boulder.name}</h1>
+        <img src={boulder.image} alt="boulders" />
+        <p>Grade: {boulder.grade}</p>
+        <p>Rating: {boulder.rating}</p>
+        <p>Description: {boulder.description}</p>
+      </Wrapper>
+
+      <MDBContainer className="mt-5" style={{ maxWidth: "1400px" }}>
+        <MDBRow className="justify-content-center">
+          <MDBCol md="8" lg="6">
+            <MDBCard
+              className="shadow-0 border"
+              style={{ backgroundColor: "#fff4ed" }}
+            >
+              <MDBCardBody>
+                
+                <form onSubmit={handleSubmit}>
                   <MDBInput
                     wrapperClass="mb-4"
                     placeholder="Type comment..."
                     label="+ Add a comment"
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
                   />
-  
-                  {comment.map((comment) => (
-                    <MDBCard key={comment.id} className="mb-4">
-                      <MDBCardBody>
-                        <p>{comment.comment}</p>
-  
-                        <div className="d-flex justify-content-between">
-                          <div className="d-flex flex-row align-items-center">
-                            <MDBCardImage
-                              src="https://tse3.mm.bing.net/th?id=OIP.l08HuCelRHqEcW947tj82wHaJU&pid=Api&P=0"
+                  <button type="submit" className="btn btn-primary">
+                    Post Commie
+                  </button>
+                </form>
+
+                {comment.map((comment) => (
+                  <MDBCard key={comment.id} className="mb-4">
+                    <MDBCardBody>
+                      <p>{comment.comment}</p>
+
+                      <div className="d-flex justify-content-between">
+                        <div className="d-flex flex-row align-items-center">
+                          <MDBCardImage
+                            src="https://vignette1.wikia.nocookie.net/dreamworks/images/7/7b/Gumby-1-.jpg/revision/latest?cb=20150806012250"
+
                               alt="gumby"
                               width="25"
                               height="25"
@@ -82,6 +114,7 @@ import {
                               style={{ marginTop: "-0.16rem" }}
                             />
                           </div>
+                          
                         </div>
                       </MDBCardBody>
                     </MDBCard>
