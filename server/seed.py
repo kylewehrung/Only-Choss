@@ -57,7 +57,7 @@ with app.app_context():
             region = regions[i],
             area = areas[i],
         )
-        # boulder.user = rc(users)
+        
         boulders.append(boulder)
 
 
@@ -68,12 +68,20 @@ with app.app_context():
         "icky", "lemons", "skunky", "cheap af", "baguette", "capitalist", "history what?", "too hard", "Kelly sucks"
     ]
 
-    for i in range(9):
+    for i in range(len(comments)):
         comment = Comment(
             comment = comments[i],
             user = rc(users),
-            boulder = rc(boulders),
+            # boulder = rc(boulders),
         )
+
+
+        boulder_name = names[i]
+        boulder = next((bouldy for bouldy in boulders if bouldy.name == boulder_name), None)
+
+        if boulder:
+            comment.boulder = boulder
+
 
         comment_list.append(comment)
     db.session.add_all(comment_list)

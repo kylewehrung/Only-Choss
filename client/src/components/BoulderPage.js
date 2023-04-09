@@ -111,12 +111,6 @@ const StyledWrapper = styled.div`
 `;
 
 
-// const Rapper = styled.div`
-// position: absolute;
-// left: 465px;
-// top: 320px;
-// `
-
 const Wrapper = styled.div`
 position: absolute;
 left: 50px;
