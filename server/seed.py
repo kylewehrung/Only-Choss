@@ -1,11 +1,38 @@
+from random import randint, choice as rc
+
 
 from app import app
-from models import db, Boulder, User
+from models import db, Boulder, User, Comment
+
 
 with app.app_context():   
+    db.create_all()
     Comment.query.delete()
     Boulder.query.delete()
     User.query.delete()
+
+    users = []
+    usernames = []
+    names = ['kyle-cant-climb','Alex Puccio','CeCe','Matt Fultz','Aiden Roberts','ham','Melissa', '2009', 'Mac Miller']
+
+    for i in range(9):
+        username = names[i]
+        while username in usernames:
+            username = names[i]
+        usernames.append(username)
+
+        user = User(
+            username=username,   
+        )
+
+        user.password_hash = user.username + 'password'
+
+        users.append(user)
+    db.session.add_all(users)
+
+
+
+
 
 
 
@@ -30,8 +57,26 @@ with app.app_context():
             region = regions[i],
             area = areas[i],
         )
+        # boulder.user = rc(users)
         boulders.append(boulder)
 
+
+
+
+    comment_list = []
+    comments = [
+        "icky", "lemons", "skunky", "cheap af", "baguette", "capitalist", "history what?", "too hard", "Kelly sucks"
+    ]
+
+    for i in range(9):
+        comment = Comment(
+            comment = comments[i],
+            user = rc(users),
+            boulder = rc(boulders),
+        )
+
+        comment_list.append(comment)
+    db.session.add_all(comment_list)
         
     db.session.add_all(boulders)
     db.session.commit()

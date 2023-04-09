@@ -1,144 +1,104 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { useFormik } from "formik";
-import * as yup from "yup";
-import React from "react";
 import {
-  MDBBtn,
-  MDBCard,
-  MDBCardBody,
-  MDBCardFooter,
-  MDBCardImage,
-  MDBCol,
-  MDBContainer,
-  MDBIcon,
-  MDBRow,
-  MDBTextArea,
-} from "mdb-react-ui-kit";
+    MDBCard,
+    MDBCardBody,
+    MDBCardImage,
+    MDBCol,
+    MDBContainer,
+    MDBIcon,
+    MDBInput,
+    MDBRow,
+  } from "mdb-react-ui-kit";
 
-function BoulderPage() {
-  const [boulder, setBoulder] = useState({});
-  const [comments, setComments] = useState([]);
-  const { area, boulderId } = useParams();
-  const [currentUser, setCurrentUser] = useState({ id: 0, name: "name" }); 
-
-  useEffect(() => {
-    fetch(`/boulders/${area}/${boulderId}`)
-      .then((r) => {
-        if (!r.ok) {
-          throw new Error("Failed to fetch boulder data.");
-        }
-        return r.json();
-      })
-      .then((data) => {
-        setBoulder(data.boulder);
-      })
-      .catch((error) => console.log(error));
-  }, [area, boulderId]);
-
-  const validationSchema = yup.object().shape({
-    comment: yup.string(),
-  });
-
-  // ...
-    const formik = useFormik({
-        initialValues: {
-        comment: "",
-        },
-        validationSchema,
-        onSubmit: (values) => {
-        const comment = values.comment;
-        const user_id = currentUser.id;
-        const boulder_id = boulder.id;
-        fetch("/comments", {
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ comment, user_id, boulder_id }),
+  function BoulderPage() {
+    const [boulder, setBoulder] = useState({});
+    const [comment, setComment] = useState([]);
+    const { area, boulderId } = useParams();
+  
+    useEffect(() => {
+      fetch(`/boulders/${area}/${boulderId}`)
+        .then((r) => {
+          if (!r.ok) {
+            throw new Error("Failed to fetch boulder data.");
+          }
+          return r.json();
         })
+        .then(setBoulder)
+        .catch((error) => console.log(error));
+  
+      fetch("/comments")
         .then((r) => r.json())
-        .then((newComment) => {
-            setComments([...comments, newComment]);
-            formik.resetForm(); 
-            })
-            .catch((error) => console.log(error));
-        },
-    });
-    
+        .then(setComment)
+        .catch((error) => console.log(error));
+    }, [area, boulderId]);
+  
     return (
-        <section className="vh-100" style={{ backgroundColor: "#eee" }}>
-        // <StyledWrapper>
-        {/* <Wrapper>
-        <h1>{boulder.name}</h1>
+      <StyledWrapper>
+        <Wrapper>
+          <h1>{boulder.name}</h1>
           <img src={boulder.image} alt="boulders" />
           <p>Grade: {boulder.grade}</p>
           <p>Rating: {boulder.rating}</p>
           <p>Description: {boulder.description}</p>
-        </Wrapper> */}
-        // </StyledWrapper>
-        <MDBContainer className="py-5" style={{ maxWidth: "1000px" }}>
-            <MDBRow className="justify-content-center">
-            <MDBCol md="12" lg="10" xl="8">
-                <MDBCard>
+        </Wrapper>
+  
+        <MDBContainer className="mt-5" style={{ maxWidth: "1400px" }}>
+          <MDBRow className="justify-content-center">
+            <MDBCol md="8" lg="6">
+              <MDBCard
+                className="shadow-0 border"
+                style={{ backgroundColor: "#fff4ed" }}
+              >
                 <MDBCardBody>
-                   
+                  <MDBInput
+                    wrapperClass="mb-4"
+                    placeholder="Type comment..."
+                    label="+ Add a comment"
+                  />
+  
+                  {comment.map((c) => (
+                    <MDBCard key={c.id} className="mb-4">
+                      <MDBCardBody>
+                        <p>{c.comment}</p>
+  
+                        <div className="d-flex justify-content-between">
+                          <div className="d-flex flex-row align-items-center">
+                            <MDBCardImage
+                              src="https://tse3.mm.bing.net/th?id=OIP.l08HuCelRHqEcW947tj82wHaJU&pid=Api&P=0"
+                              alt="gumby"
+                              width="25"
+                              height="25"
+                            />
+                            <p className="small mb-0 ms-2">{`User Id: ${c.user_id}`}</p>
+                          </div>
+                          <div className="d-flex flex-row align-items-center">
+                            <p className="small text-muted mb-0">Rating</p>
+                            <MDBIcon
+                              far
+                              icon="star"
+                              style={{ marginTop: "-0.16rem" }}
+                            />
+                            <p className="small text-muted mb-0">{c.likes}</p>
+                          </div>
+                        </div>
+                      </MDBCardBody>
+                    </MDBCard>
+                  ))}
                 </MDBCardBody>
-    
-                <MDBCardFooter
-                    className="py-3 border-0"
-                    style={{ backgroundColor: "#f8f9fa" }}
-                >
-                    <form onSubmit={formik.handleSubmit}>
-                    <div className="d-flex flex-start w-100">
-                        <MDBCardImage
-                        className="rounded-circle shadow-1-strong me-3"
-                        src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp"
-                        alt="avatar"
-                        width="40"
-                        height="40"
-                        />
-                        <MDBTextArea
-                        label="Message"
-                        id="textAreaExample"
-                        rows={4}
-                        style={{ backgroundColor: "#fff" }}
-                        wrapperClass="w-100"
-                        name="comment"
-                        onChange={formik.handleChange}
-                        value={formik.values.comment}
-                        />
-                    </div>
-                    <div className="float-end mt-2 pt-1">
-                        <MDBBtn size="sm" type="submit" className="me-1">
-                        Post comment
-                        </MDBBtn>
-                        <MDBBtn outline size="sm">
-                        Cancel
-                        </MDBBtn>
-                    </div>
-                    </form>
-                </MDBCardFooter>
-                </MDBCard>
+              </MDBCard>
             </MDBCol>
-            </MDBRow>
+          </MDBRow>
         </MDBContainer>
-        </section>
+      </StyledWrapper>
     );
+  }
+  
+  
+
+
     
-
-     }
-
-              
-          
-  
-
-
-  
-    
-  
-  
     
     
     
@@ -151,7 +111,11 @@ const StyledWrapper = styled.div`
 `;
 
 
-
+// const Rapper = styled.div`
+// position: absolute;
+// left: 465px;
+// top: 320px;
+// `
 
 const Wrapper = styled.div`
 position: absolute;
@@ -169,3 +133,12 @@ export default BoulderPage;
 
 
 
+// <StyledWrapper>
+{/* <Wrapper>
+  <h1>{boulder.name}</h1>
+  <img src={boulder.image} alt="boulders" />
+  <p>Grade: {boulder.grade}</p>
+  <p>Rating: {boulder.rating}</p>
+  <p>Description: {boulder.description}</p>
+  </Wrapper> */}
+// </StyledWrapper>
