@@ -80,9 +80,9 @@ function handleDeleteComment(id) {
         <h1 className="h1">{boulder.name}</h1>
         <Image src={boulder.image} alt="boulders" />
         <TextWrapper>
-        <p >Grade: {boulder.grade}</p>
-        <p>Rating: {boulder.rating}</p>
-        <p>Description: {boulder.description}</p>
+        <li >Grade: {boulder.grade}</li>
+        <li>Rating: {boulder.rating}</li>
+        <li>Description: {boulder.description}</li>
         </TextWrapper>
       </Container>
 
@@ -187,6 +187,11 @@ const TextWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: "cascadia", sans-serif;
+  max-width: 350px;
+  display: block;
+  margin-bottom: 10px;
+  background-color: #eee;
 `;
 
 
