@@ -129,7 +129,7 @@ function handleDeleteComment(id) {
                               style={{ marginTop: "-0.16rem" }}
                             />
                             <button onClick={() => handleDeleteComment(comment.id)}>
-                                Remove Comment
+                                Remove Commie
                             </button>
                           </div>
                           

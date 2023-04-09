@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link, useParams, Route } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import Table from "react-bootstrap/Table";
 
 function BoulderList() {
   const [boulders, setBoulders] = useState([]);
   const { area } = useParams();
+  const history = useHistory();
 
   useEffect(() => {
     fetch(`/boulders/${area}`)
@@ -13,6 +14,9 @@ function BoulderList() {
       .then(setBoulders);
   }, [area]);
 
+  const handleBoulderClick = (boulder) => {
+    history.push(`/boulders/${area}/${boulder.id}`);
+  }
 
   return (
     <Wrapper>
@@ -28,20 +32,14 @@ function BoulderList() {
         <tbody>
           {boulders.map((boulder) => (
             <tr key={boulder.id}>
-              <td>
-                <Link to={`/boulders/${area}/${boulder.id}`}>
-                  {boulder.name}
-                </Link>
+              <td onClick={() => handleBoulderClick(boulder)}>
+                {boulder.name}
               </td>
-              <td>
-                <Link to={`/boulders/${area}/${boulder.id}`}>
-                  {boulder.grade}
-                </Link>
+              <td onClick={() => handleBoulderClick(boulder)}>
+                {boulder.grade}
               </td>
-              <td>
-                <Link to={`/boulders/${area}/${boulder.id}`}>
-                  {boulder.rating}
-                </Link>
+              <td onClick={() => handleBoulderClick(boulder)}>
+                {boulder.rating}
               </td>
             </tr>
           ))}
@@ -50,6 +48,7 @@ function BoulderList() {
     </Wrapper>
   );
 }
+
 
 const Wrapper = styled.div`
   background-image: url("https://www.color-hex.com/palettes/74642.png");
