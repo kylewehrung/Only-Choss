@@ -58,6 +58,21 @@ function BoulderPage() {
       .catch((error) => console.log(error));
   };
 
+
+
+function handleDeleteComment(id) {
+    fetch(`/comments/${boulderId}`, {
+        method: "DELETE",
+    }).then((r) => {
+        if (r.ok) {
+            setComment((comment) => 
+            comment.filter((comm) => comm.id !==id))
+        }
+    })
+}
+
+
+
   return (
     <StyledWrapper>
       <Wrapper>
@@ -113,6 +128,9 @@ function BoulderPage() {
                               icon="star"
                               style={{ marginTop: "-0.16rem" }}
                             />
+                            <button onClick={() => handleDeleteComment(comment.id)}>
+                                Remove Comment
+                            </button>
                           </div>
                           
                         </div>

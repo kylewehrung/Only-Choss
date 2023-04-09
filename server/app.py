@@ -161,7 +161,28 @@ class Comments(Resource):
     
 
 
+    def delete(self, boulder_id):
+        comment = Comment.query.filter_by(boulder_id=boulder_id).first()
+        db.session.delete(comment)
+        db.session.commit()
+        return make_response({}, 204)
+    
 api.add_resource(Comments, "/comments/<int:boulder_id>")
+
+
+
+
+
+# class CommentsById(Resource):
+
+#     def delete(self, id):
+#         comment = Comment.query.filter_by(id=id).first()
+#         db.session.delete(comment)
+#         db.session.commit()
+#         return make_response({}, 204)
+# api.add_resource(CommentsById, "/comments<int:id>")
+
+
 
 
 
