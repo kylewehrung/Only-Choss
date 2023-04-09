@@ -48,8 +48,29 @@ code {
 
 .mt-5 {
   position: absolute;
-  top: 410px
+  top: 410px;
+  
 }
+
+
+.comment-handle {
+  cursor: move;
+  background-color: #eee;
+  padding: 8px;
+  border-radius: 4px;
+  width: 85px;
+  margin: 0 auto; /* This will center the handle horizontally */
+  }
+
+
+.p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: 80px;
+}
+
 
 
 .dropdown-menu li {

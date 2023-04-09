@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import Draggable from 'react-draggable';
 import {
     MDBCard,
     MDBCardBody,
@@ -75,15 +76,19 @@ function handleDeleteComment(id) {
 
   return (
     <StyledWrapper>
-      <Wrapper>
-        <h1>{boulder.name}</h1>
-        <img src={boulder.image} alt="boulders" />
-        <p>Grade: {boulder.grade}</p>
+      <Container>
+        <h1 className="h1">{boulder.name}</h1>
+        <Image src={boulder.image} alt="boulders" />
+        <TextWrapper>
+        <p >Grade: {boulder.grade}</p>
         <p>Rating: {boulder.rating}</p>
         <p>Description: {boulder.description}</p>
-      </Wrapper>
+        </TextWrapper>
+      </Container>
 
-      <MDBContainer className="mt-5" style={{ maxWidth: "1400px" }}>
+    <Draggable handle=".comment-handle">
+      <MDBContainer className="mt-5" style={{ maxWidth: "1100px" }}>
+      <div className="comment-handle">drag me</div>
         <MDBRow className="justify-content-center">
           <MDBCol md="8" lg="6">
             <MDBCard
@@ -142,6 +147,7 @@ function handleDeleteComment(id) {
             </MDBCol>
           </MDBRow>
         </MDBContainer>
+        </Draggable>
       </StyledWrapper>
     );
   }
@@ -162,10 +168,26 @@ const StyledWrapper = styled.div`
 `;
 
 
-const Wrapper = styled.div`
-position: absolute;
-left: 50px;
-top: 70px;`
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  top: 80px;
+`;
+
+const Image = styled.img`
+  max-width: 350px;
+  height: auto;
+  object-fit: cover;
+  margin-bottom: 16px;
+`;
+
+const TextWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 
 
