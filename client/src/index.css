@@ -11,6 +11,7 @@ body {
   background-position: fixed;
   background-repeat: no-repeat;
   
+  
 }
 
 .boulders {
@@ -59,10 +60,9 @@ code {
   padding: 8px;
   border-radius: 4px;
   width: 85px;
-  margin: 0 auto; /* This will center the handle horizontally */
-  }
+  margin: 0 auto; 
 
-
+}
 
 
 

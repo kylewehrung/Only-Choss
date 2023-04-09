@@ -1,5 +1,5 @@
-
 import { useEffect, useState } from "react";
+import { useUser } from "./context";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Draggable from 'react-draggable';
@@ -14,11 +14,54 @@ import {
     MDBRow,
   } from "mdb-react-ui-kit";
 
+
+
 function BoulderPage() {
   const [boulder, setBoulder] = useState({});
   const [comment, setComment] = useState([]);
   const [newComment, setNewComment] = useState(""); 
+  const [editComment, setEditComment] = useState(null);
   const { area, boulderId } = useParams();
+  const { user } = useUser();
+
+
+const handleEditComment = (comment) => {
+    setEditComment(comment);
+    setNewComment(comment.comment);
+  };
+  
+  const handleCancelEdit = () => {
+    setEditComment(null);
+    setNewComment("");
+  };
+  
+  const handleUpdateComment = (e) => {
+    e.preventDefault();
+    fetch(`/comments/${editComment.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        comment: newComment,
+      }),
+    })
+      .then((r) => r.json())
+      .then((updatedComment) => {
+        setComment((prevComments) =>
+          prevComments.map((comment) =>
+            comment.id === updatedComment.id ? updatedComment : comment
+          )
+        );
+        setNewComment("");
+        setEditComment(null);
+      })
+      .catch((error) => console.log(error));
+  };
+
+
+
+
 
   useEffect(() => {
     fetch(`/boulders/${area}/${boulderId}`)
@@ -37,7 +80,11 @@ function BoulderPage() {
       .catch((error) => console.log(error));
   }, [area, boulderId]);
 
+ 
 
+  console.log(user.id)
+
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     fetch(`/comments/${boulderId}`, {
@@ -47,7 +94,7 @@ function BoulderPage() {
       },
       body: JSON.stringify({
         comment: newComment,
-        user_id: 1, //need a way to make this dynamic, we'll get that eventually
+        user_id: user.id,
         boulder_id: boulderId,
       }),
     })
@@ -58,6 +105,7 @@ function BoulderPage() {
       })
       .catch((error) => console.log(error));
   };
+
 
 
 
@@ -74,15 +122,19 @@ function handleDeleteComment(id) {
 
 
 
+
   return (
     <StyledWrapper>
       <Container>
         <h1 className="h1">{boulder.name}</h1>
         <Image src={boulder.image} alt="boulders" />
         <TextWrapper>
-        <li >Grade: {boulder.grade}</li>
-        <li>Rating: {boulder.rating}</li>
-        <li>Description: {boulder.description}</li>
+        <h5><strong>Grade:</strong></h5>
+        <p >{boulder.grade}</p>
+        <h5><strong>Rating:</strong></h5>
+        <p>{boulder.rating}</p>
+        <h5><strong>Description:</strong></h5>
+        <p>{boulder.description}</p>
         </TextWrapper>
       </Container>
 
@@ -97,64 +149,87 @@ function handleDeleteComment(id) {
             >
               <MDBCardBody>
                 
+              {editComment ? (
+                <form onSubmit={handleUpdateComment}>
+                    <MDBInput
+                    wrapperClass="mb-4"
+                    placeholder="Type comment..."
+                    label="Edit comment"
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    />
+                </form>
+                ) : (
                 <form onSubmit={handleSubmit}>
-                  <MDBInput
+                    <MDBInput
                     wrapperClass="mb-4"
                     placeholder="Type comment..."
                     label="+ Add a comment"
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
-                  />
-                  <button type="submit" className="btn btn-primary">
-                    Post Commie
-                  </button>
+                    />
+                    <button type="submit" className="btn btn-primary">
+                    Post Comment
+                    </button>
                 </form>
+                )}
 
                 {comment.map((comment) => (
-                  <MDBCard key={comment.id} className="mb-4">
-                    <MDBCardBody>
-                      <p>{comment.comment}</p>
-
-                      <div className="d-flex justify-content-between">
-                        <div className="d-flex flex-row align-items-center">
-                          <MDBCardImage
-                            src="https://vignette1.wikia.nocookie.net/dreamworks/images/7/7b/Gumby-1-.jpg/revision/latest?cb=20150806012250"
-
-                              alt="gumby"
-                              width="25"
-                              height="25"
+                    <MDBCard key={comment.id} className="mb-4">
+                        <MDBCardBody>
+                        {editComment && editComment.id === comment.id ? (
+                            <MDBInput
+                            wrapperClass="mb-4"
+                            placeholder="Type comment..."
+                            label="Edit comment"
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            
                             />
-                            <p className="small mb-0 ms-2">{`User Id: ${comment.user_id}`}</p>
-                          </div>
-                          <div className="d-flex flex-row align-items-center">
-                            <p className="small text-muted mb-0">Rating</p>
-                            <MDBIcon
-                              far
-                              icon="star"
-                              style={{ marginTop: "-0.16rem" }}
-                            />
-                            <button onClick={() => handleDeleteComment(comment.id)}>
-                                Remove Commie
-                            </button>
-                          </div>
-                          
-                        </div>
-                      </MDBCardBody>
+                        ) : (
+                            <p>{comment.comment}</p>
+                        )}
+                        <div className="d-flex justify-content-between">
+                            {editComment && editComment.id === comment.id ? (
+                            <div className="d-flex flex-row align-items-center">
+                                <button type="submit" className="btn btn-primary me-2" onClick={handleUpdateComment}>
+                                Update
+                                </button>
+                                <button type="button" className="btn btn-danger" onClick={handleCancelEdit}>
+                                Cancel
+                                </button>
+                            </div>
+                            ) : (
+                                
+                            <div className="d-flex flex-row align-items-center">
+                                <p className="small text-muted mb-0">Rating</p>
+                                <MDBIcon far icon="star" style={{ marginTop: "-0.16rem" }} />
+                                <button className="btn btn ms-2" onClick={() => handleDeleteComment(comment.id)}>Remove Comment</button>
+                                <button
+                                type="button"
+                                className="btn btn ms-2"
+                                onClick={() => handleEditComment(comment)}
+                                >
+                                Edit Comment
+                                </button>
+                            </div>
+                            )}
+                         </div>
+                         </MDBCardBody>
                     </MDBCard>
-                  ))}
-                </MDBCardBody>
-              </MDBCard>
-            </MDBCol>
-          </MDBRow>
-        </MDBContainer>
-        </Draggable>
-      </StyledWrapper>
-    );
-  }
-  
-  
+                    ))}
+                  </MDBCardBody>
+             </MDBCard>
+        </MDBCol>
+        </MDBRow>
+      </MDBContainer>
+    </Draggable>
+</StyledWrapper>
+);
 
-
+}
+                    
+                    
     
     
     
@@ -165,6 +240,7 @@ const StyledWrapper = styled.div`
   background-size: cover;
   width: 100%;
   height: 100vh;
+  
 `;
 
 
@@ -177,10 +253,10 @@ const Container = styled.div`
 `;
 
 const Image = styled.img`
-  max-width: 350px;
+  max-width: 450px;
   height: auto;
   object-fit: cover;
-  margin-bottom: 16px;
+  margin-bottom: 13px;
 `;
 
 const TextWrapper = styled.div`
@@ -188,10 +264,11 @@ const TextWrapper = styled.div`
   justify-content: center;
   align-items: center;
   font-family: "cascadia", sans-serif;
-  max-width: 350px;
+  max-width: 550px;
   display: block;
   margin-bottom: 10px;
   background-color: #eee;
+  padding: 15px;
 `;
 
 
