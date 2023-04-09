@@ -63,32 +63,17 @@ class Boulder(db.Model, SerializerMixin):
     rating = db.Column(db.Integer, nullable=False)
     description = db.Column(db.String)
     image = db.Column(db.String)
-    location_id = db.Column(db.Integer, db.ForeignKey("locations.id"))
+    state = db.Column(db.String)
+    region = db.Column(db.String)
+    area = db.Column(db.String)
+   
 
     # comments = db.relationship("Comment", backref="boulder")
     # users = association_proxy("comments", "user")
     
     def __repr__(self):
-        return f"Boulder Id: {self.id}, Name: {self.name}, Grade: {self.grade}, Rating: {self.rating}, Description: {self.description}, Image: {self.image}, location id: {self.location_id}"
+        return f"Boulder Id: {self.id}, Name: {self.name}, Grade: {self.grade}, Rating: {self.rating}, Description: {self.description}, Image: {self.image}, State: {self.state}, Region: {self.region}, Area: {self.area}"
     
-
-
-
-
-class Location(db.Model, SerializerMixin):
-    __tablename__ = "locations"
-    serialize_rules = ("-boulders",)
-
-    id = db.Column(db.Integer, primary_key=True)
-    state = db.Column(db.String)
-    region = db.Column(db.String)
-    area = db.Column(db.String)
-
-    boulders = db.relationship("Boulder", backref="location")
-    
-
-    def __repr__(self):
-        return f"Location Id: {self.id}, State: {self.state}, Region: {self.region}, Area: {self.area}"
 
 
 
