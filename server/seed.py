@@ -3,6 +3,7 @@ from app import app
 from models import db, Boulder, User
 
 with app.app_context():   
+    Comment.query.delete()
     Boulder.query.delete()
     User.query.delete()
 

@@ -2,11 +2,10 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy_serializer import SerializerMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
-from sqlalchemy.orm import validates
 from sqlalchemy.ext.associationproxy import association_proxy
 
 
-from config import db, bcrypt
+from config import db, bcrypt, validates
 
 
 
@@ -68,8 +67,8 @@ class Boulder(db.Model, SerializerMixin):
     area = db.Column(db.String)
    
 
-    # comments = db.relationship("Comment", backref="boulder")
-    # users = association_proxy("comments", "user")
+    comments = db.relationship("Comment", backref="boulder")
+    users = association_proxy("comments", "user")
     
     def __repr__(self):
         return f"Boulder Id: {self.id}, Name: {self.name}, Grade: {self.grade}, Rating: {self.rating}, Description: {self.description}, Image: {self.image}, State: {self.state}, Region: {self.region}, Area: {self.area}"

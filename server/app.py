@@ -1,9 +1,11 @@
 from flask import request, session, make_response, abort
 from flask_restful import Resource
+from sqlalchemy.orm import subqueryload
+
 from sqlalchemy.exc import IntegrityError
 
 from config import app, db, api
-from models import User, Boulder
+from models import User, Boulder, Comment
 
 
 class Signup(Resource):
@@ -133,7 +135,30 @@ api.add_resource(BouldersById, "/boulders/<string:area>/<int:id>")
 
 
 
+class Comments(Resource):
 
+    def post(self):
+        data = request.get_json()
+
+       
+        user = User.query.options(subqueryload(User.boulders)).get(data["user_id"]) #I don't understand this
+
+        new_commie = Comment(
+            comment=data["comment"], 
+            user_id=data["user_id"], 
+            boulder_id=data["boulder_id"]
+            )
+        db.session.add(new_commie)
+        db.session.commit()
+
+        return make_response(
+            {
+                "comment": new_commie.comment,
+                "user": user.to_dict(),
+                "boulder_id": new_commie.boulder_id
+            },
+            201
+        )
 
 
 
