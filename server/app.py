@@ -136,11 +136,11 @@ api.add_resource(BouldersById, "/boulders/<string:area>/<int:id>")
 
 
 class Comments(Resource):
-
-    def get(self):
-        comments = [comment.to_dict() for comment in Comment.query.all()]
+    
+    def get(self, boulder_id):
+        comments = [comment.to_dict() for comment in Comment.query.filter_by(boulder_id=boulder_id)]
         return make_response(
-            comments, 
+            comments,
             200
         )
 
@@ -169,8 +169,8 @@ class Comments(Resource):
             201
         )
 
-api.add_resource(Comments, "/comments")
 
+api.add_resource(Comments, "/comments/<string:boulder_id>")
 
 
 

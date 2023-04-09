@@ -28,7 +28,8 @@ import {
         .then(setBoulder)
         .catch((error) => console.log(error));
   
-      fetch("/comments")
+
+      fetch(`/comments/${boulderId}`)
         .then((r) => r.json())
         .then(setComment)
         .catch((error) => console.log(error));
@@ -58,10 +59,10 @@ import {
                     label="+ Add a comment"
                   />
   
-                  {comment.map((c) => (
-                    <MDBCard key={c.id} className="mb-4">
+                  {comment.map((comment) => (
+                    <MDBCard key={comment.id} className="mb-4">
                       <MDBCardBody>
-                        <p>{c.comment}</p>
+                        <p>{comment.comment}</p>
   
                         <div className="d-flex justify-content-between">
                           <div className="d-flex flex-row align-items-center">
@@ -71,7 +72,7 @@ import {
                               width="25"
                               height="25"
                             />
-                            <p className="small mb-0 ms-2">{`User Id: ${c.user_id}`}</p>
+                            <p className="small mb-0 ms-2">{`User Id: ${comment.user_id}`}</p>
                           </div>
                           <div className="d-flex flex-row align-items-center">
                             <p className="small text-muted mb-0">Rating</p>
@@ -80,7 +81,6 @@ import {
                               icon="star"
                               style={{ marginTop: "-0.16rem" }}
                             />
-                            <p className="small text-muted mb-0">{c.likes}</p>
                           </div>
                         </div>
                       </MDBCardBody>
