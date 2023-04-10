@@ -154,7 +154,7 @@ fetch(`/comments/${id}`, {
 
     <Draggable handle=".comment-handle">
       <MDBContainer className="mt-5" style={{ maxWidth: "1100px" }}>
-      <div className="comment-handle">drag me</div>
+      <div className="comment-handle"><strong>drag me</strong></div>
         <MDBRow className="justify-content-center">
           <MDBCol md="8" lg="6">
             <MDBCard

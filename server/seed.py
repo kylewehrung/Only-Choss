@@ -13,9 +13,9 @@ with app.app_context():
 
     users = []
     usernames = []
-    names = ['kyle-cant-climb','Alex Puccio','CeCe','Matt Fultz','Aiden Roberts','ham','Melissa', '2009', 'Mac Miller']
+    names = ['kyle-cant-climb','Alex Puccio','CeCe','Matt Fultz','Aiden Roberts','ham','Melissa', '2009', 'Mac Miller', 'turkey', "JID"]
 
-    for i in range(9):
+    for i in range(11):
         username = names[i]
         while username in usernames:
             username = names[i]
@@ -38,15 +38,15 @@ with app.app_context():
 
 
     boulders = []
-    names = ["Kahuna Roof", "Lemons to Lemonade", "Skunk Rub", "Penny Pinch", "French Arete", "Desert Eagle", "Moulin Rouge", "The Game", "Kelly Roof"]
-    grades = ["V6", "V3", "V4", "V3", "V7", "V5", "V10", "V15", "V6"]
-    ratings = [2, 3, 2, 3, 2, 2, 1, 2, 3]
-    descriptions = ["A Colorado choss classic. Nearly every climber in Colorado knows the name of this painful and ever-tipping-over boulder. Start on obvious crimps that have been broken multiple times over the years, try to do the first move without dabbing and continue your way up to an easy topout.", "The best boulders are the ones that explode on their own, this is one of the best.", "not good", "Spraypainted", "Contrived", "Crumbly", "Bad fall zone", "Too hard", "Hold broke?"]
-    images = ["https://mountainproject.com/assets/photos/climb/106568829_smallMed_1494121225.jpg?cache=1655238556", "https://mountainproject.com/assets/photos/climb/123361958_smallMed_1667257896_topo.jpg?cache=1667349189", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
-    states = ["Colorado", "Colorado", "Colorado", "Colorado", "Colorado", "Colorado", "Colorado", "Colorado", "Arizona"]
-    regions = ["Northern Colorado", "Northern Colorado", "Northern Colorado", "Northern Colorado", "Northern Colorado", "Northern Colorado", "Central Colorado", "Central Colorado", "Flagstaff"]
-    areas = ["Carter Lake", "Carter Lake", "Carter Lake", "Horsetooth Resovoir", "Poudre Canyon", "Lory State Park", "Clear Creek Canyon", "Eldorado Canyon", "Kelly Canyon"]
-    for i in range(9):
+    names = ["Kahuna Roof", "Lemons to Lemonade", "Skunk Rub", "Penny Pinch", "French Arete", "Desert Eagle", "Moulin Rouge", "The Game", "Kelly Roof", "Turban", "Powell Pinch"]
+    grades = ["V6", "V3", "V4", "V3", "V7", "V5", "V10", "V15", "V6", "V1", "V2"]
+    ratings = [2, 3, 2, 3, 2, 2, 1, 2, 3, 2, 2]
+    descriptions = ["A Colorado choss classic. Nearly every climber in Colorado knows the name of this painful and ever-tipping-over boulder. Start on obvious crimps that have been broken multiple times over the years, try to do the first move without dabbing and continue your way up to an easy topout.", "The best boulders are the ones that explode on their own, this is one of the best.", "not good", "Spraypainted", "Contrived", "Crumbly", "Bad fall zone", "Too hard", "Hold broke?", "15 feet from the parking lot, non-obvious start, painful holds and awkward movement.", "A great problem if you want to inprove your pain tolerance."]
+    images = ["https://mountainproject.com/assets/photos/climb/106568829_smallMed_1494121225.jpg?cache=1655238556", "https://mountainproject.com/assets/photos/climb/123361958_smallMed_1667257896_topo.jpg?cache=1667349189", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "https://mountainproject.com/assets/photos/climb/110053051_smallMed_1494368300.jpg?cache=1608922013"]
+    states = ["Colorado", "Colorado", "Colorado", "Colorado", "Colorado", "Colorado", "Colorado", "Colorado", "Arizona", "California", "California"]
+    regions = ["Northern Colorado", "Northern Colorado", "Northern Colorado", "Northern Colorado", "Northern Colorado", "Northern Colorado", "Central Colorado", "Central Colorado", "Flagstaff", "Joshua Tree NP", "Joshua Tree NP"]
+    areas = ["Carter Lake", "Carter Lake", "Carter Lake", "Horsetooth Resovoir", "Poudre Canyon", "Lory State Park", "Clear Creek Canyon", "Eldorado Canyon", "Kelly Canyon", "Cap Rock Boulders", "Cap Rock Boulders"]
+    for i in range(11):
         boulder = Boulder(
             name = names[i],
             grade = grades[i],
@@ -65,9 +65,8 @@ with app.app_context():
 
     comment_list = []
     comments = [
-        "icky", "lemons", "skunky", "cheap af", "baguette", "capitalist", "history what?", "too hard", "Kelly sucks"
+        "icky", "lemons", "skunky", "cheap af", "baguette", "capitalist", "history what?", "too hard", "Kelly sucks", "I split my fingernail vertically on this climb, I didn't know that was possible.", "Was fun after I sent, pretty area though"
     ]
-
     for i in range(len(comments)):
         comment = Comment(
             comment = comments[i],
