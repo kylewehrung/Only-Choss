@@ -27,21 +27,21 @@ code {
 
 .header {
   position: absolute;
-  top: 75px;
+  top: 85px;
   left: 20px;
 }
 
 
 .table {
   position: absolute;
-  top: 160px;
+  top: 180px;
   left: 0px;
 }
 
 
 .mt-5.basic {
   position: absolute;
-  top: 60px;
+  top: 77px;
   
 
 }
@@ -56,8 +56,8 @@ code {
 
 .comment-handle {
   cursor: move;
-  background-color: #eee;
-  padding: 8px;
+  background-color: #abb0ce;
+  padding: 6px;
   border-radius: 4px;
   width: 85px;
   margin: 0 auto; 

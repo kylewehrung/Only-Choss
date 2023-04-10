@@ -145,7 +145,7 @@ function handleDeleteComment(id) {
           <MDBCol md="8" lg="6">
             <MDBCard
               className="shadow-0 border"
-              style={{ backgroundColor: "#fff4ed" }}
+              style={{ backgroundColor: "#abb0ce" }}
             >
               <MDBCardBody>
                 
@@ -235,7 +235,7 @@ function handleDeleteComment(id) {
     
     
 const StyledWrapper = styled.div`
-  background-image: url("https://www.color-hex.com/palettes/74642.png");
+  background-image: url("https://i.pinimg.com/736x/65/36/67/653667e26bf65e8d42302cfad8da4769.jpg");
   background-position: center;
   background-size: cover;
   width: 100%;
@@ -257,7 +257,9 @@ const Image = styled.img`
   height: auto;
   object-fit: cover;
   margin-bottom: 13px;
+  border: 1px solid black;
 `;
+
 
 const TextWrapper = styled.div`
   display: flex;
@@ -267,8 +269,9 @@ const TextWrapper = styled.div`
   max-width: 550px;
   display: block;
   margin-bottom: 10px;
-  background-color: #eee;
+  background-color: #abb0ce;
   padding: 15px;
+  border: 1px solid black;
 `;
 
 

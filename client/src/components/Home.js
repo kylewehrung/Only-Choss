@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { Box } from "../styles";
+import Button from 'react-bootstrap/Button';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Popover from 'react-bootstrap/Popover';
 import { MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBDropdownItem, MDBDropdownLink, MDBContainer } from 'mdb-react-ui-kit';
 
 function Home() {
@@ -16,11 +19,35 @@ function Home() {
   }, []);
 
 
+  const popover = (
+    <Popover id="popover-basic">
+      <Popover.Header as="h3">More Info</Popover.Header>
+      <Popover.Body>
+      Welcome to Only Choss, a user-filled database that only hosts climbs that are traditionally seen as painful, awkward, ugly, crumbly and contrived. Our rating system largely follows the fun-scale:
+        <li>3 star: Type III fun. Not fun during or after. A good time.</li>
+       <li>2 star: Type II fun. Not fun during, fun after you send.</li>
+        <li>1 star: Type I fun. Fun, although you feel strange afterwards.</li>
+       <li>0 star: No 0 star climbs, if it's too good and enjoyable it won't be here.</li>
+      </Popover.Body>
+    </Popover>
+  );
+
+
+
+
+
   const uniqueStates = [...new Set(boulderLocations.map((location) => location.state))];
 
   return (
-    <MDBContainer className="d-flex justify-content-center mt-5 basic">
-      <MDBDropdown>
+    
+   <StyledBox className="mt-5 basic">
+   
+      <OverlayTrigger trigger="click" placement="right" overlay={popover}>
+        <StyledPopoverButton variant="success">What is Only Choss?</StyledPopoverButton>
+      </OverlayTrigger>
+      <MDBDropdown style={{ marginTop: '75px' }}>
+
+
         <MDBDropdownToggle>Select Location</MDBDropdownToggle>
         <MDBDropdownMenu>
           {uniqueStates.map((state) => (
@@ -57,10 +84,23 @@ function Home() {
           ))}
         </MDBDropdownMenu>
       </MDBDropdown>
-    </MDBContainer>
+    </StyledBox>
   );
 }
 
+
+const StyledBox = styled(Box)`
+  position: relative;
+  background: transparent;
+`;
+
+const StyledPopoverButton = styled(Button)`
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-right: 10px;
+ 
+`;
 export default Home;
 
 
