@@ -209,12 +209,37 @@ class Comments(Resource):
     
 
 
-    def patch(self, boulder_id):
-        comment = Comment.query.filter_by(boulder_id=boulder_id).first()
+    # def patch(self, boulder_id):
+    #     comment = Comment.query.filter_by(boulder_id=boulder_id).first()
 
-        if not comment:
-            return make_response({"error": "Comment not found"}, 404)
+    #     if not comment:
+    #         return make_response({"error": "Comment not found"}, 404)
 
+    #     data = request.get_json()
+
+    #     for attr in data:
+    #         setattr(comment, attr, data[attr])
+        
+    #     db.session.add(comment)
+    #     db.session.commit()
+
+    #     return make_response(
+    #         comment.to_dict(), 
+    #         202
+    #     )
+
+
+
+api.add_resource(Comments, "/comments/<int:boulder_id>")
+
+    
+
+
+class CommentsById(Resource):
+
+    def patch(self, id):
+
+        comment = Comment.query.filter(Comment.id==id).first() 
         data = request.get_json()
 
         for attr in data:
@@ -228,12 +253,7 @@ class Comments(Resource):
             202
         )
 
-
-
-api.add_resource(Comments, "/comments/<int:boulder_id>")
-
-    
-
+api.add_resource(CommentsById, "/comments/<int:id>")
 
 
 
