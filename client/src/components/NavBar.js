@@ -15,13 +15,17 @@ function NavBar({ user, setUser }) {
 
   const location = useLocation();
   const isBoulderPage = location.pathname.startsWith("/boulders/");
+  
+  const isChossPage = location.pathname.startsWith("/boulders")
+  const addChossButton = isChossPage && <Button  variant="outline" as={Link} to="add-choss">Add Choss</Button>;
 
   return (
     <Wrapper>
       <Logo isBoulderPage={isBoulderPage}>
-        <Link to="/boulders">Only Choss</Link>
+        <Link to="/">Only Choss</Link>
       </Logo>
       <Nav>
+        {addChossButton}
         <Button variant="outline" onClick={() => history.goBack()}>
           Go Back
         </Button>
@@ -66,6 +70,7 @@ const Nav = styled.nav`
 `;
 
 export default NavBar;
+
 
 
 

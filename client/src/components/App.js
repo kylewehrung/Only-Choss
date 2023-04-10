@@ -10,7 +10,7 @@ import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
 import BoulderList from "./BoulderList";
 import BoulderPage from "./BoulderPage";
-// import AddChoss from "./AddChoss";
+import AddChoss from "./AddChoss";
 
 
 
@@ -83,7 +83,10 @@ function App() {
 				<Route path="/boulders/:area">
 					<BoulderList />
 				</Route>
-				<Route path="/boulders">
+				<Route path="/add-choss">
+					<AddChoss />
+				</Route>
+				<Route path="/">
 					<Home user={user} />
 				</Route>
 			</Switch>

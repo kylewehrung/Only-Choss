@@ -104,6 +104,30 @@ class Boulders(Resource):
     def get(self):
         boulders = [boulder.to_dict() for boulder in Boulder.query.all()]
         return make_response(boulders, 200)
+    
+    
+    def post(self):
+        data = request.get_json()
+
+        boulder = Boulder(
+            name=data["name"],
+            grade=data["grade"],
+            rating=data["rating"],
+            description=data["description"],
+            image=data["image"],
+            state=data["state"],
+            region=data["region"],
+            area=data["area"],
+        )
+
+        db.session.add(boulder)
+        db.session.commit()
+
+        return make_response(
+            boulder.to_dict(),
+            201
+        )
+
 
 api.add_resource(Boulders, "/boulders")
 
