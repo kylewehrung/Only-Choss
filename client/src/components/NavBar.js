@@ -1,38 +1,39 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { Button } from "../styles";
 
-
 function NavBar({ user, setUser }) {
-    function handleLogoutClick() {
-        fetch("/logout", {method: "DELETE"}).then((r) => {
-            if (r.ok) {
-                setUser(null);
-            }
-        });
-    }
+  const history = useHistory();
+  function handleLogoutClick() {
+    fetch("/logout", { method: "DELETE" }).then((r) => {
+      if (r.ok) {
+        setUser(null);
+      }
+    });
+  }
 
+  const location = useLocation();
+  const isBoulderPage = location.pathname.startsWith("/boulders/");
 
-    return (
-        <Wrapper>
-          <Logo>
-            <Link to="/boulders">Only Choss</Link>
-          </Logo>
-          <Nav>
-            <Button variant="outline" onClick={handleLogoutClick}>
-              Logout
-            </Button>
-          </Nav>
-        </Wrapper>
-      );
-    }
-    
+  return (
+    <Wrapper>
+      <Logo isBoulderPage={isBoulderPage}>
+        <Link to="/boulders">Only Choss</Link>
+      </Logo>
+      <Nav>
+        <Button variant="outline" onClick={() => history.goBack()}>
+          Go Back
+        </Button>
+        <Button variant="outline" onClick={handleLogoutClick}>
+          Logout
+        </Button>
+      </Nav>
+    </Wrapper>
+  );
+}
 
-
-
-
-    const Wrapper = styled.header`
+const Wrapper = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -42,13 +43,12 @@ function NavBar({ user, setUser }) {
   left: 0;
   right: 0;
   z-index: 999;
-  background-color: rgba(255,255,255,0.8)
 `;
 
 const Logo = styled.h1`
   font-family: 'cascadia';
   font-size: 2.8rem;
-  color: black;
+  color: ${({ isBoulderPage }) => (isBoulderPage ? "#313639" : "#f8f0e3")};
   margin: 0;
   line-height: 1;
 
@@ -66,6 +66,7 @@ const Nav = styled.nav`
 `;
 
 export default NavBar;
+
 
 
 

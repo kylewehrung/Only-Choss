@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Error, Input, FormField, Label } from "../styles";
+import { Button, Error, Input, FormField } from "../styles";
 import styled from "styled-components";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -23,6 +23,8 @@ function SignUpForm({ onLogin }) {
             password: "",
             passwordConfirmation: "",
         },
+        validateOnChange: false,
+        validateOnBlur: false,
         validationSchema,
         onSubmit: (values, { setErrors, setSubmitting }) => {
             setSubmitting(true)
@@ -109,7 +111,6 @@ function SignUpForm({ onLogin }) {
 
 
 
-
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -122,18 +123,14 @@ const FormFields = styled.div`
 `;
 
 
-
-
 const CustomLabel = styled.label`
-  color: #222;
+  color: #f8f0e3;
   font-size: 2em;
   font-family: "cascadia";
-  background-color: rgba(255, 255, 255, 0.5);
+  ${'' /* background-color: rgba(255, 255, 255, 0.5); */}
   padding: .1em;
   
 `;
-
-
 
 const WhiteInput = styled(Input)`
   color: black;

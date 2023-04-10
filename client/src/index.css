@@ -6,7 +6,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: Roboto, Helvetica, Arial, sans-serif;
-  background-image: url('https://cdn.wallpapersafari.com/12/70/ZdCN6r.png');
+  background-image: url('https://www.larimer.org/sites/default/files/03_horsetooth_rock_at_horsetooth_mountain_open_space_by_richard_ernst.jpg');
   background-size: cover;
   background-position: fixed;
   background-repeat: no-repeat;
@@ -24,10 +24,28 @@ code {
 }
 
 
+.header {
+  position: absolute;
+  top: 75px;
+  left: 20px;
+}
+
+
+.table {
+  position: absolute;
+  top: 160px;
+  left: 0px;
+}
+
+
 .basic {
   position: absolute;
   top: 60px;
+  
+
 }
+
+
 
 .dropdown-menu li {
   position: relative;

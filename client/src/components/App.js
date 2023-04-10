@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Switch, Route, useHistory } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-// import backgroundGif from "../images/background.gif";
 import { Button } from "../styles";
 import Home from "./Home";
 import NavBar from "./NavBar";
 import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
 import BoulderList from "./BoulderList";
+import BoulderPage from "./BoulderPage";
 import AddChoss from "./AddChoss";
 
 
@@ -73,6 +73,9 @@ function App() {
 		<NavBar user={user} setUser={setUser} />
 		<MainContainer>
 			<Switch>
+				<Route path="/boulders/:area/:boulderId">
+					<BoulderPage />
+				</Route>
 				<Route path="/boulders/:area">
 					<BoulderList />
 				</Route>
@@ -108,7 +111,7 @@ const AppWrapper = styled.div`
 const Logo = styled.h1`
   font-family: 'cascadia';
   font-size: 4rem;
-  color: #222;
+  color: #f8f0e3;
   position: absolute;
   top: 25px;
 `;

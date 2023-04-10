@@ -110,8 +110,29 @@ class BoulderByArea(Resource):
         boulders = Boulder.query.filter(Boulder.area == area).all()
         return make_response([boulder.to_dict() for boulder in boulders], 200)
 
-api.add_resource(BoulderByArea, "/boulders/<string:area>")
 api.add_resource(Boulders, "/boulders")
+api.add_resource(BoulderByArea, "/boulders/<string:area>")
+
+
+
+
+
+
+class BouldersById(Resource):
+    
+    def get(self, area, id):
+        print(f"area: {area}, id: {id}")
+        boulder = Boulder.query.filter_by(id=id).first().to_dict()
+        return make_response(
+            boulder, 
+            200
+        )
+
+api.add_resource(BouldersById, "/boulders/<string:area>/<int:id>")
+
+
+
+
 
 
 
