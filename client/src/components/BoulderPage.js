@@ -17,108 +17,122 @@ import {
 
 
 function BoulderPage() {
-  const [boulder, setBoulder] = useState({});
-  const [comment, setComment] = useState([]);
-  const [newComment, setNewComment] = useState(""); 
-  const [editComment, setEditComment] = useState(null);
-  const { area, boulderId } = useParams();
-  const { user } = useUser();
+    const [boulder, setBoulder] = useState({});
+    const [comment, setComment] = useState([]);
+    const [newComment, setNewComment] = useState(""); 
+    const [editComment, setEditComment] = useState(null);
+    const { area, boulderId } = useParams();
+    const { user } = useUser();
 
+    useEffect(() => {
+        fetch(`/boulders/${area}/${boulderId}`)
+        .then((r) => {
+            if (!r.ok) {
+            throw new Error("Failed to fetch boulder data.");
+            }
+            return r.json();
+        })
+        .then(setBoulder)
+        .catch((error) => console.log(error));
 
-const handleEditComment = (comment) => {
-    setEditComment(comment);
-    setNewComment(comment.comment);
-  };
-  
-  const handleCancelEdit = () => {
-    setEditComment(null);
-    setNewComment("");
-  };
-  
-  const handleUpdateComment = (e) => {
-    e.preventDefault();
-    fetch(`/comments/${editComment.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        comment: newComment,
-      }),
-    })
-      .then((r) => r.json())
-      .then((updatedComment) => {
-        setComment((prevComments) =>
-          prevComments.map((comment) =>
-            comment.id === updatedComment.id ? updatedComment : comment
-          )
-        );
-        setNewComment("");
-        setEditComment(null);
-      })
-      .catch((error) => console.log(error));
-  };
+        
+        fetch(`/comments/${boulderId}`)
+        .then((r) => r.json())
+        .then((data) => {
+        
+            const commentsWithPermissions = data.map((comment) => ({
+            ...comment,
+            canEdit: comment.user_id === user.id,
+            canDelete: comment.user_id === user.id,
+            }));
+            setComment(commentsWithPermissions);
+        })
+        .catch((error) => console.log(error));
+    }, [area, boulderId, user.id]);
 
-
-
-
-
-  useEffect(() => {
-    fetch(`/boulders/${area}/${boulderId}`)
-      .then((r) => {
-        if (!r.ok) {
-          throw new Error("Failed to fetch boulder data.");
+    const handleEditComment = (comment) => {
+        
+        if (comment.user_id === user.id) {
+        setEditComment(comment);
+        setNewComment(comment.comment);
         }
-        return r.json();
-      })
-      .then(setBoulder)
-      .catch((error) => console.log(error));
+    };
 
-    fetch(`/comments/${boulderId}`)
-      .then((r) => r.json())
-      .then(setComment)
-      .catch((error) => console.log(error));
-  }, [area, boulderId]);
+    const handleCancelEdit = () => {
+        setEditComment(null);
+        setNewComment("");
+    };
 
- 
+    const handleUpdateComment = (e) => {
+        e.preventDefault();
+        fetch(`/comments/${editComment.id}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            comment: newComment,
+        }),
+        })
+        .then((r) => r.json())
+        .then((updatedComment) => {
+            setComment((prevComments) =>
+            prevComments.map((comment) =>
+                comment.id === updatedComment.id ? updatedComment : comment
+            )
+            );
+            setNewComment("");
+            setEditComment(null);
+        })
+        .catch((error) => console.log(error));
+    };
 
-  console.log(user.id)
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        fetch(`/comments/${boulderId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            comment: newComment,
+            user_id: user.id,
+            boulder_id: boulderId,
+        }),
+        })
 
-  
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    fetch(`/comments/${boulderId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        comment: newComment,
-        user_id: user.id,
-        boulder_id: boulderId,
-      }),
-    })
-      .then((r) => r.json())
-      .then((data) => {
+        .then((r) => r.json())
+        .then((data) => {
         setComment([...comment, data]);
         setNewComment("");
-      })
-      .catch((error) => console.log(error));
-  };
+        })
+        .catch((error) => console.log(error));
+    };
 
 
 
 
 function handleDeleteComment(id) {
-    fetch(`/comments/${boulderId}`, {
-        method: "DELETE",
-    }).then((r) => {
-        if (r.ok) {
-            setComment((comment) => 
-            comment.filter((comm) => comm.id !==id))
-        }
-    })
+const commentToDelete = comment.find((comm) => comm.id === id);
+
+if (commentToDelete.user_id !== user.id) {
+    console.log("You are not authorized to delete this comment.");
+    return;
 }
+
+fetch(`/comments/${id}`, {
+    method: "DELETE",
+})
+    .then((r) => {
+    if (r.ok) {
+        setComment((comments) => comments.filter((comm) => comm.id !== id));
+    } else {
+        throw new Error("Failed to delete comment.");
+    }
+    })
+    .catch((error) => console.log(error));
+}
+
 
 
 
