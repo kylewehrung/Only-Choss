@@ -17,108 +17,122 @@ import {
 
 
 function BoulderPage() {
-  const [boulder, setBoulder] = useState({});
-  const [comment, setComment] = useState([]);
-  const [newComment, setNewComment] = useState(""); 
-  const [editComment, setEditComment] = useState(null);
-  const { area, boulderId } = useParams();
-  const { user } = useUser();
+    const [boulder, setBoulder] = useState({});
+    const [comment, setComment] = useState([]);
+    const [newComment, setNewComment] = useState(""); 
+    const [editComment, setEditComment] = useState(null);
+    const { area, boulderId } = useParams();
+    const { user } = useUser();
 
+    useEffect(() => {
+        fetch(`/boulders/${area}/${boulderId}`)
+        .then((r) => {
+            if (!r.ok) {
+            throw new Error("Failed to fetch boulder data.");
+            }
+            return r.json();
+        })
+        .then(setBoulder)
+        .catch((error) => console.log(error));
 
-const handleEditComment = (comment) => {
-    setEditComment(comment);
-    setNewComment(comment.comment);
-  };
-  
-  const handleCancelEdit = () => {
-    setEditComment(null);
-    setNewComment("");
-  };
-  
-  const handleUpdateComment = (e) => {
-    e.preventDefault();
-    fetch(`/comments/${editComment.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        comment: newComment,
-      }),
-    })
-      .then((r) => r.json())
-      .then((updatedComment) => {
-        setComment((prevComments) =>
-          prevComments.map((comment) =>
-            comment.id === updatedComment.id ? updatedComment : comment
-          )
-        );
-        setNewComment("");
-        setEditComment(null);
-      })
-      .catch((error) => console.log(error));
-  };
+        
+        fetch(`/comments/${boulderId}`)
+        .then((r) => r.json())
+        .then((data) => {
+        
+            const commentsWithPermissions = data.map((comment) => ({
+            ...comment,
+            canEdit: comment.user_id === user.id,
+            canDelete: comment.user_id === user.id,
+            }));
+            setComment(commentsWithPermissions);
+        })
+        .catch((error) => console.log(error));
+    }, [area, boulderId, user.id]);
 
-
-
-
-
-  useEffect(() => {
-    fetch(`/boulders/${area}/${boulderId}`)
-      .then((r) => {
-        if (!r.ok) {
-          throw new Error("Failed to fetch boulder data.");
+    const handleEditComment = (comment) => {
+        
+        if (comment.user_id === user.id) {
+        setEditComment(comment);
+        setNewComment(comment.comment);
         }
-        return r.json();
-      })
-      .then(setBoulder)
-      .catch((error) => console.log(error));
+    };
 
-    fetch(`/comments/${boulderId}`)
-      .then((r) => r.json())
-      .then(setComment)
-      .catch((error) => console.log(error));
-  }, [area, boulderId]);
+    const handleCancelEdit = () => {
+        setEditComment(null);
+        setNewComment("");
+    };
 
- 
+    const handleUpdateComment = (e) => {
+        e.preventDefault();
+        fetch(`/comments/${editComment.id}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            comment: newComment,
+        }),
+        })
+        .then((r) => r.json())
+        .then((updatedComment) => {
+            setComment((prevComments) =>
+            prevComments.map((comment) =>
+                comment.id === updatedComment.id ? updatedComment : comment
+            )
+            );
+            setNewComment("");
+            setEditComment(null);
+        })
+        .catch((error) => console.log(error));
+    };
 
-  console.log(user.id)
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        fetch(`/comments/${boulderId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            comment: newComment,
+            user_id: user.id,
+            boulder_id: boulderId,
+        }),
+        })
 
-  
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    fetch(`/comments/${boulderId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        comment: newComment,
-        user_id: user.id,
-        boulder_id: boulderId,
-      }),
-    })
-      .then((r) => r.json())
-      .then((data) => {
+        .then((r) => r.json())
+        .then((data) => {
         setComment([...comment, data]);
         setNewComment("");
-      })
-      .catch((error) => console.log(error));
-  };
+        })
+        .catch((error) => console.log(error));
+    };
 
 
 
 
 function handleDeleteComment(id) {
-    fetch(`/comments/${boulderId}`, {
-        method: "DELETE",
-    }).then((r) => {
-        if (r.ok) {
-            setComment((comment) => 
-            comment.filter((comm) => comm.id !==id))
-        }
-    })
+const commentToDelete = comment.find((comm) => comm.id === id);
+
+if (commentToDelete.user_id !== user.id) {
+    console.log("You are not authorized to delete this comment.");
+    return;
 }
+
+fetch(`/comments/${id}`, {
+    method: "DELETE",
+})
+    .then((r) => {
+    if (r.ok) {
+        setComment((comments) => comments.filter((comm) => comm.id !== id));
+    } else {
+        throw new Error("Failed to delete comment.");
+    }
+    })
+    .catch((error) => console.log(error));
+}
+
 
 
 
@@ -140,12 +154,12 @@ function handleDeleteComment(id) {
 
     <Draggable handle=".comment-handle">
       <MDBContainer className="mt-5" style={{ maxWidth: "1100px" }}>
-      <div className="comment-handle">drag me</div>
+      <div className="comment-handle"><strong>drag me</strong></div>
         <MDBRow className="justify-content-center">
           <MDBCol md="8" lg="6">
             <MDBCard
               className="shadow-0 border"
-              style={{ backgroundColor: "#fff4ed" }}
+              style={{ backgroundColor: "#abb0ce" }}
             >
               <MDBCardBody>
                 
@@ -235,7 +249,7 @@ function handleDeleteComment(id) {
     
     
 const StyledWrapper = styled.div`
-  background-image: url("https://www.color-hex.com/palettes/74642.png");
+  background-image: url("https://i.pinimg.com/736x/65/36/67/653667e26bf65e8d42302cfad8da4769.jpg");
   background-position: center;
   background-size: cover;
   width: 100%;
@@ -257,7 +271,9 @@ const Image = styled.img`
   height: auto;
   object-fit: cover;
   margin-bottom: 13px;
+  border: 1px solid black;
 `;
+
 
 const TextWrapper = styled.div`
   display: flex;
@@ -267,8 +283,9 @@ const TextWrapper = styled.div`
   max-width: 550px;
   display: block;
   margin-bottom: 10px;
-  background-color: #eee;
+  background-color: #abb0ce;
   padding: 15px;
+  border: 1px solid black;
 `;
 
 

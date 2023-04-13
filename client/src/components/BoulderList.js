@@ -21,7 +21,7 @@ function BoulderList() {
   return (
     <Wrapper>
       <h1 className="header">Boulders in {area}</h1>
-      <Table striped bordered hover variant="light" className="table">
+      <Table striped bordered hover variant="" className="table"> 
         <thead>
           <tr>
             <th>Name</th>
@@ -51,12 +51,14 @@ function BoulderList() {
 
 
 const Wrapper = styled.div`
-  background-image: url("https://www.color-hex.com/palettes/74642.png");
+  background-image: url("https://i.pinimg.com/736x/65/36/67/653667e26bf65e8d42302cfad8da4769.jpg");
   background-position: center;
   background-size: cover;
   width: 100%;
   height: 100vh;
 `;
+
+{/* <Table striped bordered hover variant="light" className="table"> to make the table grey and not see through */}
 
 export default BoulderList;
 
