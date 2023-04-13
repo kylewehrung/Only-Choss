@@ -2,11 +2,10 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy_serializer import SerializerMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
-from sqlalchemy.orm import validates
 from sqlalchemy.ext.associationproxy import association_proxy
 
 
-from config import db, bcrypt
+from config import db, bcrypt, validates
 
 
 
@@ -47,7 +46,7 @@ class User(db.Model, SerializerMixin):
         return bcrypt.check_password_hash(self._password_hash, password.encode("utf-8"))
     
     def __repr__(self):
-        return f"User ID: {self.id}, Username: {self.username}, Admin? {self.admin}"
+        return f"User ID: {self.id}, Username: {self.username}"
     
 
 
@@ -55,7 +54,7 @@ class User(db.Model, SerializerMixin):
 
 class Boulder(db.Model, SerializerMixin):
     __tablename__ = "boulders"
-    # serialize_rules = ("-",)
+    serialize_rules = ("-comments",)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
@@ -68,11 +67,11 @@ class Boulder(db.Model, SerializerMixin):
     area = db.Column(db.String)
    
 
-    # comments = db.relationship("Comment", backref="boulder")
-    # users = association_proxy("comments", "user")
+    comments = db.relationship("Comment", backref="boulder")
+    users = association_proxy("comments", "user")
     
     def __repr__(self):
-        return f"Boulder Id: {self.id}, Name: {self.name}, Grade: {self.grade}, Rating: {self.rating}, Description: {self.description}, Image: {self.image}, State: {self.state}, Region: {self.region}, Area: {self.area}"
+        return f"Boulder Id: {self.id}, Name: {self.name}, Grade: {self.grade}, Rating: {self.rating}, Description: {self.description}, Image: {self.image}, State: {self.state}, Region: {self.region}, Area: {self.area} Comments: {self.comments}"
     
 
 
@@ -81,6 +80,8 @@ class Boulder(db.Model, SerializerMixin):
 
 class Comment(db.Model, SerializerMixin):
     __tablename__ = "comments"
+    serialize_rules = ('-user','-boulder',)
+
 
     id = db.Column(db.Integer, primary_key=True)
     comment = db.Column(db.String)

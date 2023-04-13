@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createContext, useContext } from "react";
+// import { UserIdContext } from './context';
+import { UserContext } from "./context";
 import { Switch, Route, useHistory } from "react-router-dom";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { Button } from "../styles";
 import Home from "./Home";
 import NavBar from "./NavBar";
@@ -8,8 +10,7 @@ import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
 import BoulderList from "./BoulderList";
 import BoulderPage from "./BoulderPage";
-import AddChoss from "./AddChoss";
-
+// import AddChoss from "./AddChoss";
 
 
 
@@ -19,6 +20,7 @@ function App() {
 	const [user, setUser] = useState(null);
 	const [showLogin, setShowLogin] = useState(true);
 	const history = useHistory();
+	const [user_id, setUser_id] = useState(1)
 
 	useEffect(() => {
 		fetch("/check_session").then((r) => {
@@ -70,6 +72,8 @@ function App() {
 
   return (
 	<AppWrapper>
+	 <UserContext.Provider value={{ user, setUser }}>
+      
 		<NavBar user={user} setUser={setUser} />
 		<MainContainer>
 			<Switch>
@@ -84,6 +88,7 @@ function App() {
 				</Route>
 			</Switch>
 		</MainContainer>
+		</UserContext.Provider>
 	</AppWrapper>
   );
 }

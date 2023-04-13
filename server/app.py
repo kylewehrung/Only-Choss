@@ -1,9 +1,11 @@
 from flask import request, session, make_response, abort
 from flask_restful import Resource
+from sqlalchemy.orm import subqueryload
+
 from sqlalchemy.exc import IntegrityError
 
 from config import app, db, api
-from models import User, Boulder
+from models import User, Boulder, Comment
 
 
 class Signup(Resource):
@@ -97,12 +99,52 @@ api.add_resource(Logout, "/logout")
 
 
 
-
 class Boulders(Resource):
 
     def get(self):
         boulders = [boulder.to_dict() for boulder in Boulder.query.all()]
         return make_response(boulders, 200)
+
+api.add_resource(Boulders, "/boulders")
+
+
+
+
+
+
+class BoulderById(Resource):
+    
+
+    # def get(self, id):
+    #     boulder = Boulder.query.filter_by(id=id).first().to_dict()
+    #     return make_response(
+    #         boulder, 
+    #         200
+    #     )
+
+
+    def patch(self, id):
+        boulder = Boulder.query.filter_by(id=id).first()
+
+        data = request.get_json()
+
+        for attr in data:
+            setattr(boulder, attr, data[attr])
+        
+        db.session.add(boulder)
+        db.session.commit()
+
+        return make_response(
+            boulder.to_dict(), 
+            202
+        )
+api.add_resource(BoulderById, "/boulders/<int:id>")
+
+
+
+
+
+
 
 class BoulderByArea(Resource):
 
@@ -110,7 +152,6 @@ class BoulderByArea(Resource):
         boulders = Boulder.query.filter(Boulder.area == area).all()
         return make_response([boulder.to_dict() for boulder in boulders], 200)
 
-api.add_resource(Boulders, "/boulders")
 api.add_resource(BoulderByArea, "/boulders/<string:area>")
 
 
@@ -131,6 +172,88 @@ class BouldersById(Resource):
 api.add_resource(BouldersById, "/boulders/<string:area>/<int:id>")
 
 
+
+
+
+
+class Comments(Resource):
+    
+    def get(self, boulder_id):
+        comments = [comment.to_dict() for comment in Comment.query.filter_by(boulder_id=boulder_id)]
+        return make_response(
+            comments,
+            200
+        )
+
+
+    def post(self, boulder_id):
+        data = request.get_json()
+        comment = Comment(
+            comment=data["comment"],
+            user_id=data["user_id"],
+            boulder_id=boulder_id
+        )
+        db.session.add(comment)
+        db.session.commit()
+        return make_response(
+            comment.to_dict(),
+            201
+        )
+    
+
+    def delete(self, boulder_id):
+        comment = Comment.query.filter_by(boulder_id=boulder_id).first()
+        db.session.delete(comment)
+        db.session.commit()
+        return make_response({}, 204)
+    
+
+
+    # def patch(self, boulder_id):
+    #     comment = Comment.query.filter_by(boulder_id=boulder_id).first()
+
+    #     if not comment:
+    #         return make_response({"error": "Comment not found"}, 404)
+
+    #     data = request.get_json()
+
+    #     for attr in data:
+    #         setattr(comment, attr, data[attr])
+        
+    #     db.session.add(comment)
+    #     db.session.commit()
+
+    #     return make_response(
+    #         comment.to_dict(), 
+    #         202
+    #     )
+
+
+
+api.add_resource(Comments, "/comments/<int:boulder_id>")
+
+    
+
+
+class CommentsById(Resource):
+
+    def patch(self, id):
+
+        comment = Comment.query.filter(Comment.id==id).first() 
+        data = request.get_json()
+
+        for attr in data:
+            setattr(comment, attr, data[attr])
+        
+        db.session.add(comment)
+        db.session.commit()
+
+        return make_response(
+            comment.to_dict(), 
+            202
+        )
+
+api.add_resource(CommentsById, "/comments/<int:id>")
 
 
 

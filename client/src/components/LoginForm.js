@@ -3,8 +3,18 @@ import { Button, Error, Input, FormField } from "../styles";
 import styled from "styled-components";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { useUser } from "./context";
+
 
 function LoginForm({ onLogin }) {
+  const { setUser } = useUser()
+
+
+  const handleLogin = () => {
+    const user = { id: 2, name: "John" }; 
+    setUser(user);
+  };
+
   const validationSchema = yup.object({
     username: yup.string().required(),
     password: yup.string().required(),
@@ -65,7 +75,8 @@ function LoginForm({ onLogin }) {
         />
       </FormField>
       <FormField>
-        <Button variant="fill" color="primary" type="submit">
+        <Button onClick={handleLogin}
+        variant="fill" color="primary" type="submit">
           {formik.isSubmitting ? "Loading..." : "Login"}
         </Button>
       </FormField>
