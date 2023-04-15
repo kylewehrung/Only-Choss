@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
-import { Button, Error, Input, FormField } from "../styles";
+import { Button, Error, Input, FormField, Textarea } from "../styles";
 import styled from "styled-components";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -63,15 +63,16 @@ function AddChoss() {
   };
 
   return (
+    <StyledWrapper>
     <Wrapper>
-      <Button onClick={toggleFormVisibility}>
+      <Button className="show-form" variant="outline" onClick={toggleFormVisibility}>
         {isFormVisible ? "Hide form" : "Show form"}
       </Button>
       {isFormVisible && (
         <form onSubmit={formik.handleSubmit}>
           <FormFields>
             <FormField>
-              <CustomLabel htmlFor="name">name</CustomLabel>
+              <CustomLabel htmlFor="name">Name</CustomLabel>
               <WhiteInput
                 type="text"
                 id="name"
@@ -81,7 +82,7 @@ function AddChoss() {
               />
             </FormField>
             <FormField>
-              <CustomLabel htmlFor="grade">grade</CustomLabel>
+              <CustomLabel htmlFor="grade">Grade</CustomLabel>
               <WhiteInput
                 type="text"
                 id="grade"
@@ -99,15 +100,6 @@ function AddChoss() {
               />
             </FormField>
 
-            <FormField>
-              <CustomLabel htmlFor="description">Description</CustomLabel>
-              <WhiteInput
-                type="text"
-                id="description"
-                value={formik.values.description}
-                onChange={formik.handleChange}
-              />
-            </FormField>
 
             <FormField>
               <CustomLabel htmlFor="image">Image</CustomLabel>
@@ -140,7 +132,7 @@ function AddChoss() {
             </FormField>
             
             <FormField>
-                <CustomLabel htmlFor="area">area</CustomLabel>
+                <CustomLabel htmlFor="area">Area</CustomLabel>
                 <WhiteInput 
                 type="text"
                 id="area"
@@ -150,7 +142,17 @@ function AddChoss() {
             </FormField>
 
             <FormField>
-            <Button type="submit" disabled={formik.isSubmitting}>
+              <CustomLabel htmlFor="description">Description</CustomLabel>
+              <WhiteTextarea
+                rows="3"
+                id="description"
+                value={formik.values.description}
+                onChange={formik.handleChange}
+              />
+            </FormField>
+
+            <FormField>
+            <Button type="submit" variant="outline" disabled={formik.isSubmitting}>
                 {formik.isSubmitting ? "Loading..." : "Add Choss"}
                 </Button>
             </FormField>
@@ -166,13 +168,11 @@ function AddChoss() {
         </form>
       )}
        </Wrapper>
+      </StyledWrapper>
       
     )
 
 }
-
-
-
 
 
 
@@ -183,24 +183,45 @@ const Wrapper = styled.div`
   height: 100vh;
 `;
 
+
+
 const FormFields = styled.div`
-  width: 400px;
+  position: relative;
+  top: 50px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  width: 650px;
 `;
 
 
 const CustomLabel = styled.label`
-  color: #f8f0e3;
+  color: black;
   font-size: 2em;
   font-family: "cascadia";
-  ${'' /* background-color: rgba(255, 255, 255, 0.5); */}
   padding: .1em;
   
 `;
+
+
+const WhiteTextarea = styled(Textarea)`
+  color: black;
+`;
+
 
 const WhiteInput = styled(Input)`
   color: black;
 `;
 
+
+const StyledWrapper = styled.div`
+  background-image: url("https://i.pinimg.com/736x/65/36/67/653667e26bf65e8d42302cfad8da4769.jpg");
+  background-position: center;
+  background-size: cover;
+  width: 100%;
+  height: 100vh;
+  
+`;
 
 
 

@@ -14,10 +14,10 @@ function NavBar({ user, setUser }) {
   }
 
   const location = useLocation();
-  const isBoulderPage = location.pathname.startsWith("/boulders/");
+  const isBoulderPage = location.pathname.startsWith("/boulders");
   
   const isChossPage = location.pathname.startsWith("/boulders")
-  const addChossButton = isChossPage && <Button  variant="outline" as={Link} to="add-choss">Add Choss</Button>;
+  const addChossButton = isChossPage && <Button  variant="outline" as={Link} to="/boulders/:area/:boulderId/:add-choss">Add Choss</Button>;
 
   return (
     <Wrapper>

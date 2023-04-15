@@ -20,7 +20,7 @@ function App() {
 	const [user, setUser] = useState(null);
 	const [showLogin, setShowLogin] = useState(true);
 	const history = useHistory();
-	const [user_id, setUser_id] = useState(1)
+	// const [user_id, setUser_id] = useState(1)
 
 	useEffect(() => {
 		fetch("/check_session").then((r) => {
@@ -33,7 +33,7 @@ function App() {
 
 	const handleLogin = (user) => {
 		setUser(user);
-		history.push("/boulders");
+		history.push("/");
 	};
 
 
@@ -77,14 +77,14 @@ function App() {
 		<NavBar user={user} setUser={setUser} />
 		<MainContainer>
 			<Switch>
+				<Route path="/boulders/:area/:boulderId/:add-choss">
+					<AddChoss />
+				</Route>
 				<Route path="/boulders/:area/:boulderId">
 					<BoulderPage />
 				</Route>
 				<Route path="/boulders/:area">
 					<BoulderList />
-				</Route>
-				<Route path="/add-choss">
-					<AddChoss />
 				</Route>
 				<Route path="/">
 					<Home user={user} />
