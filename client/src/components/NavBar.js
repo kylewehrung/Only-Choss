@@ -5,6 +5,7 @@ import { Button } from "../styles";
 
 function NavBar({ user, setUser }) {
   const history = useHistory();
+  
   function handleLogoutClick() {
     fetch("/logout", { method: "DELETE" }).then((r) => {
       if (r.ok) {

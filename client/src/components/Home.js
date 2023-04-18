@@ -63,7 +63,7 @@ function Home() {
                         (loc) =>
                             loc.state === state && loc.region === region
                         )
-                        .filter((loc, index, self) => self.findIndex(l => l.area === loc.area) === index) // I would not have gotten this on my own, wild stuff.
+                        .filter((loc, index, self) => self.findIndex(l => l.area === loc.area) === index) 
                         .map((loc) => (
                         <MDBDropdownItem key={loc.area}>
                             <MDBDropdownLink 

@@ -296,15 +296,3 @@ export default BoulderPage;
 
 
 
-
-
-
-// <StyledWrapper>
-{/* <Wrapper>
-  <h1>{boulder.name}</h1>
-  <img src={boulder.image} alt="boulders" />
-  <p>Grade: {boulder.grade}</p>
-  <p>Rating: {boulder.rating}</p>
-  <p>Description: {boulder.description}</p>
-  </Wrapper> */}
-// </StyledWrapper>

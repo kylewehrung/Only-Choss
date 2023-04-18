@@ -1,5 +1,4 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
-// import { UserIdContext } from './context';
 import { UserContext } from "./context";
 import { Switch, Route, useHistory } from "react-router-dom";
 import styled from "styled-components";
@@ -20,7 +19,6 @@ function App() {
 	const [user, setUser] = useState(null);
 	const [showLogin, setShowLogin] = useState(true);
 	const history = useHistory();
-	// const [user_id, setUser_id] = useState(1)
 
 	useEffect(() => {
 		fetch("/check_session").then((r) => {
