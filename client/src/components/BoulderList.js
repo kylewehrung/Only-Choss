@@ -24,9 +24,9 @@ function BoulderList() {
       <Table striped bordered hover variant="" className="table"> 
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Grade</th>
-            <th>Rating</th>
+            <th>Name:</th>
+            <th>Grade:</th>
+            <th>Choss Rating:</th>
           </tr>
         </thead>
         <tbody>

@@ -145,7 +145,7 @@ fetch(`/comments/${id}`, {
         <TextWrapper>
         <h5><strong>Grade:</strong></h5>
         <p >{boulder.grade}</p>
-        <h5><strong>Rating:</strong></h5>
+        <h5><strong>Choss Rating:</strong></h5>
         <p>{boulder.rating}</p>
         <h5><strong>Description:</strong></h5>
         <p>{boulder.description}</p>
