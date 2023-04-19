@@ -36,6 +36,8 @@ function BoulderPage() {
         .catch((error) => console.log(error));
 
         
+
+
         fetch(`/comments/${boulderId}`)
         .then((r) => r.json())
         .then((data) => {
@@ -87,6 +89,8 @@ function BoulderPage() {
         .catch((error) => console.log(error));
     };
 
+
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         fetch(`/comments/${boulderId}`, {
@@ -216,8 +220,6 @@ fetch(`/comments/${id}`, {
                             ) : (
                                 
                             <div className="d-flex flex-row align-items-center">
-                                {/* <p className="small text-muted mb-0">Rating</p>
-                                <MDBIcon far icon="star" style={{ marginTop: "-0.16rem" }} /> */}
                                 <button className="btn btn ms-2" onClick={() => handleDeleteComment(comment.id)}>Remove Comment</button>
                                 <button
                                 type="button"

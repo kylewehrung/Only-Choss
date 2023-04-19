@@ -93,9 +93,9 @@ with app.app_context():
             "Start on low large edge left of the roof and traverse right on the lip. Pumpy and painful, watch out for loose dogs.",
               "Crimp and scream you way to the top. Obvious start, obvious line, bring tape for when you split a tip.",
                 "Stand start in pain, continue through pain, finish in pain",
-                  "I hear this boulder is the reason Only Choss was made, words cannot describe the chossiness",
+                  "I hear this boulder is the reason Only Choss was made, words cannot describe the chossiness.",
                     "Start on ouchie holds, move right through a slippery and contrived sequence, then finish on an easy topout. Oh yeah and don't fall because there's a high chance you'll roll down the hill.",
-                      "This is on here purely because it's too hard for me.",
+                      "This is here purely because it's too hard for me.",
                         "From a left hand pinch and right hand small pocket, pull the short roof past a single good pocket, often slimy.",
                           "15 feet from the parking lot, non-obvious start, painful holds and awkward movement.",
                              "A great problem if you want to inprove your pain tolerance.",
@@ -162,7 +162,7 @@ with app.app_context():
     comment_list = []
     comments = [
         "we gonna awknowledge how much this thing is tipping over orrrr",
-          "more like off-brand-lemonade to lemons amiright",
+          "more like lemonade to lemons amiright",
             "My friend fell from a hold breaking, landed on his hand, broken hand",
               "went here on a date and we both left hurt and sad, 3/3",
                 "good for those who like to suffer",
@@ -178,7 +178,7 @@ with app.app_context():
                                   "Never been but I'll still roast it, 3/3 choss for me.",
                                     "crumbly and sad looking",
                                       "Morpho, slippery, painful, good luck if you're short", 
-                                        "Great boulder, whoever added this must not be able to fingerlock.",
+                                        "I had a good time??",
                                           "tagged with graffiti, friend dislocated knee on this, 3/3 bad time",
                                             "Sorry, but I haven't dropped any acid since the '70s and for the record Malcomn Daly used to go up and back 3 times as a warm up! Of course, after the finger-lock broke off 6-7 years ago about a third of the way up, the route is a LOT harder then it used to be; the last time I was up there in May 2001 I could only go up and back. I can remember my name just fine, it's the age thing I have to stop and figure out; let's see 2002 -1955. I'm sorry, I'm just jealous of all you new kid's out there sending your v15+, I can't climb over V9 any more. Now what was really hard was doing all those laps on Tendonitis!",
                                               "Watch out for bat poop in one of the starting holds...",
@@ -189,7 +189,6 @@ with app.app_context():
         comment = Comment(
             comment = comments[i],
             user = rc(users),
-            # boulder = rc(boulders),
         )
 
 

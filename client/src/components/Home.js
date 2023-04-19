@@ -23,7 +23,7 @@ function Home() {
     <Popover id="popover-basic">
       <Popover.Header as="h3">Only Choss Info:</Popover.Header>
       <Popover.Body>
-      Welcome to Only Choss, a user-filled database that only hosts climbs that are traditionally seen as painful, awkward, ugly, crumbly and contrived. Our rating system largely follows the fun-scale:
+      Welcome to Only Choss, a user-filled database that only hosts climbs that are traditionally seen as painful, awkward, ugly, crumbly or contrived. Our rating system largely follows the fun-scale:
         <li>3: Type III fun. Not fun during or after. A good time.</li>
        <li>2: Type II fun. Not fun during, fun after you send.</li>
         <li>1: Type I fun. Fun, although you feel strange afterwards.</li>

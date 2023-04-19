@@ -139,14 +139,6 @@ api.add_resource(Boulders, "/boulders")
 class BoulderById(Resource):
     
 
-    # def get(self, id):
-    #     boulder = Boulder.query.filter_by(id=id).first().to_dict()
-    #     return make_response(
-    #         boulder, 
-    #         200
-    #     )
-
-
     def patch(self, id):
         boulder = Boulder.query.filter_by(id=id).first()
 
@@ -223,35 +215,6 @@ class Comments(Resource):
             comment.to_dict(),
             201
         )
-    
-
-    # def delete(self, boulder_id):
-    #     comment = Comment.query.filter_by(boulder_id=boulder_id).first()
-    #     db.session.delete(comment)
-    #     db.session.commit()
-    #     return make_response({}, 204)
-    
-
-
-    # def patch(self, boulder_id):
-    #     comment = Comment.query.filter_by(boulder_id=boulder_id).first()
-
-    #     if not comment:
-    #         return make_response({"error": "Comment not found"}, 404)
-
-    #     data = request.get_json()
-
-    #     for attr in data:
-    #         setattr(comment, attr, data[attr])
-        
-    #     db.session.add(comment)
-    #     db.session.commit()
-
-    #     return make_response(
-    #         comment.to_dict(), 
-    #         202
-    #     )
-
 
 
 api.add_resource(Comments, "/comments/<int:boulder_id>")

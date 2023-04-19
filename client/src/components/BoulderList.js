@@ -58,7 +58,6 @@ const Wrapper = styled.div`
   height: 100vh;
 `;
 
-{/* <Table striped bordered hover variant="light" className="table"> to make the table grey and not see through */}
 
 export default BoulderList;
 

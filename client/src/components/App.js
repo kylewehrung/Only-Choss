@@ -97,7 +97,7 @@ function App() {
 
 
 
-//App styles:
+//App 
 
 
 const MainContainer = styled.main`
@@ -112,7 +112,7 @@ const AppWrapper = styled.div`
 
 
 
-//Login styles:
+//Login 
 
 const Logo = styled.h1`
   font-family: 'cascadia';
@@ -124,7 +124,6 @@ const Logo = styled.h1`
 
 const Wrapper = styled.section`
   height: 100vh;
-  ${'' /* background-image: url(${loginGif}); */}
   background-repeat: no-repeat;
   background-size: cover; /* cover entire background */
   background-position: center; /* center the image */
