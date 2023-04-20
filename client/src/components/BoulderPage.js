@@ -3,6 +3,7 @@ import { useUser } from "./context";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Draggable from 'react-draggable';
+import StarRating from "./StarRating";
 import {
     MDBCard,
     MDBCardBody,
@@ -23,6 +24,8 @@ function BoulderPage() {
     const [editComment, setEditComment] = useState(null);
     const { area, boulderId } = useParams();
     const { user } = useUser();
+    // const [rating, setRating] = useState(boulder.rating || 0);
+
 
     useEffect(() => {
         fetch(`/boulders/${area}/${boulderId}`)
@@ -141,6 +144,16 @@ fetch(`/comments/${id}`, {
 
 
 
+function log(value) {
+  console.log(value)
+}
+
+
+// function handleRatingChange(value) {
+//   setRating(value);
+// }
+
+
   return (
     <StyledWrapper>
       <Container>
@@ -150,7 +163,9 @@ fetch(`/comments/${id}`, {
         <h5><strong>Grade:</strong></h5>
         <p >{boulder.grade}</p>
         <h5><strong>Choss Rating:</strong></h5>
-        <p>{boulder.rating}</p>
+        <p>
+        <StarRating onChange={log} />
+        </p>
         <h5><strong>Description:</strong></h5>
         <p>{boulder.description}</p>
         </TextWrapper>
