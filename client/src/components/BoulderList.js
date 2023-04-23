@@ -24,9 +24,9 @@ function BoulderList() {
       <Table striped bordered hover variant="" className="table"> 
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Grade</th>
-            <th>Rating</th>
+            <th>Name:</th>
+            <th>Grade:</th>
+            <th>Choss Rating:</th>
           </tr>
         </thead>
         <tbody>
@@ -58,7 +58,6 @@ const Wrapper = styled.div`
   height: 100vh;
 `;
 
-{/* <Table striped bordered hover variant="light" className="table"> to make the table grey and not see through */}
 
 export default BoulderList;
 

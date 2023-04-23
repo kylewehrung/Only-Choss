@@ -36,6 +36,8 @@ function BoulderPage() {
         .catch((error) => console.log(error));
 
         
+
+
         fetch(`/comments/${boulderId}`)
         .then((r) => r.json())
         .then((data) => {
@@ -87,6 +89,8 @@ function BoulderPage() {
         .catch((error) => console.log(error));
     };
 
+
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         fetch(`/comments/${boulderId}`, {
@@ -145,7 +149,7 @@ fetch(`/comments/${id}`, {
         <TextWrapper>
         <h5><strong>Grade:</strong></h5>
         <p >{boulder.grade}</p>
-        <h5><strong>Rating:</strong></h5>
+        <h5><strong>Choss Rating:</strong></h5>
         <p>{boulder.rating}</p>
         <h5><strong>Description:</strong></h5>
         <p>{boulder.description}</p>
@@ -216,8 +220,6 @@ fetch(`/comments/${id}`, {
                             ) : (
                                 
                             <div className="d-flex flex-row align-items-center">
-                                <p className="small text-muted mb-0">Rating</p>
-                                <MDBIcon far icon="star" style={{ marginTop: "-0.16rem" }} />
                                 <button className="btn btn ms-2" onClick={() => handleDeleteComment(comment.id)}>Remove Comment</button>
                                 <button
                                 type="button"
@@ -296,15 +298,3 @@ export default BoulderPage;
 
 
 
-
-
-
-// <StyledWrapper>
-{/* <Wrapper>
-  <h1>{boulder.name}</h1>
-  <img src={boulder.image} alt="boulders" />
-  <p>Grade: {boulder.grade}</p>
-  <p>Rating: {boulder.rating}</p>
-  <p>Description: {boulder.description}</p>
-  </Wrapper> */}
-// </StyledWrapper>

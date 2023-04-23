@@ -1,5 +1,4 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
-// import { UserIdContext } from './context';
 import { UserContext } from "./context";
 import { Switch, Route, useHistory } from "react-router-dom";
 import styled from "styled-components";
@@ -10,7 +9,7 @@ import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
 import BoulderList from "./BoulderList";
 import BoulderPage from "./BoulderPage";
-// import AddChoss from "./AddChoss";
+import AddChoss from "./AddChoss";
 
 
 
@@ -20,7 +19,6 @@ function App() {
 	const [user, setUser] = useState(null);
 	const [showLogin, setShowLogin] = useState(true);
 	const history = useHistory();
-	const [user_id, setUser_id] = useState(1)
 
 	useEffect(() => {
 		fetch("/check_session").then((r) => {
@@ -33,7 +31,7 @@ function App() {
 
 	const handleLogin = (user) => {
 		setUser(user);
-		history.push("/boulders");
+		history.push("/");
 	};
 
 
@@ -77,13 +75,16 @@ function App() {
 		<NavBar user={user} setUser={setUser} />
 		<MainContainer>
 			<Switch>
+				<Route path="/boulders/:area/:boulderId/:add-choss">
+					<AddChoss />
+				</Route>
 				<Route path="/boulders/:area/:boulderId">
 					<BoulderPage />
 				</Route>
 				<Route path="/boulders/:area">
 					<BoulderList />
 				</Route>
-				<Route path="/boulders">
+				<Route path="/">
 					<Home user={user} />
 				</Route>
 			</Switch>
@@ -96,7 +97,7 @@ function App() {
 
 
 
-//App styles:
+//App 
 
 
 const MainContainer = styled.main`
@@ -111,7 +112,7 @@ const AppWrapper = styled.div`
 
 
 
-//Login styles:
+//Login 
 
 const Logo = styled.h1`
   font-family: 'cascadia';
@@ -123,7 +124,6 @@ const Logo = styled.h1`
 
 const Wrapper = styled.section`
   height: 100vh;
-  ${'' /* background-image: url(${loginGif}); */}
   background-repeat: no-repeat;
   background-size: cover; /* cover entire background */
   background-position: center; /* center the image */

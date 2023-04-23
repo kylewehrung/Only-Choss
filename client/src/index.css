@@ -66,6 +66,10 @@ code {
 }
 
 
+.show-form {
+  position: absolute;
+  top: 100px;
+}
 
 
 .dropdown-menu li {
