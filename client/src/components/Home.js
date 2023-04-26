@@ -24,10 +24,9 @@ function Home() {
       <Popover.Header as="h3">Only Choss Info:</Popover.Header>
       <Popover.Body>
       Welcome to Only Choss, a user-filled database that only hosts climbs that are traditionally seen as painful, awkward, ugly, crumbly or contrived. Our rating system largely follows the fun-scale:
-        <li>3: Type III fun. Not fun during or after. A good time.</li>
-       <li>2: Type II fun. Not fun during, fun after you send.</li>
-        <li>1: Type I fun. Fun, although you feel strange afterwards.</li>
-       <li>0: No 0 ratings, if it's too enjoyable it wont't be here.</li>
+        <li>3 Band-Aids: Type III fun. Not fun during or after. A good time.</li>
+       <li>2 Band-Aids: Type II fun. Not fun during, fun after you send.</li>
+        <li>1 Band-Aid: Type I fun. Fun, although you feel strange afterwards.</li>
       </Popover.Body>
     </Popover>
   );
