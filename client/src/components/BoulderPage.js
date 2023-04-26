@@ -141,18 +141,7 @@ fetch(`/comments/${id}`, {
 }
 
 
-
-
-
-function log(value) {
-  console.log(value)
-}
-
-
-// function handleRatingChange(value) {
-//   setRating(value);
-// }
-
+  console.log(boulder.rating)
 
   return (
     <StyledWrapper>
@@ -163,9 +152,11 @@ function log(value) {
         <h5><strong>Grade:</strong></h5>
         <p >{boulder.grade}</p>
         <h5><strong>Choss Rating:</strong></h5>
+        {boulder.rating && (
         <p>
-        <StarRating onChange={log} />
+          <StarRating value={parseInt(boulder.rating)} />
         </p>
+          )}
         <h5><strong>Description:</strong></h5>
         <p>{boulder.description}</p>
         </TextWrapper>
