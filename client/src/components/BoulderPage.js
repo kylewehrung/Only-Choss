@@ -262,7 +262,6 @@ const StyledWrapper = styled.div`
   background-size: cover;
   width: 100%;
   height: 100vh;
-  
 `;
 
 
@@ -280,6 +279,7 @@ const Image = styled.img`
   object-fit: cover;
   margin-bottom: 13px;
   border: 1px solid black;
+  box-shadow: 0 0 10px rgba(0,0,0, 0.3);
 `;
 
 
@@ -294,6 +294,7 @@ const TextWrapper = styled.div`
   background-color: #abb0ce;
   padding: 15px;
   border: 1px solid black;
+  box-shadow: 0 0 10px rgba(0,0,0, .7);
 `;
 
 

@@ -1,16 +1,17 @@
 import React from 'react';
-import { FaStar } from "react-icons/fa";
+import { BiBandAid } from "react-icons/bi";
 
 
 function Star({ filled, onClick }) {
-
     return (
-        <FaStar 
-        color={filled ? "orange" : "lightgray"}
-        onClick={onClick} />
+        <BiBandAid 
+            size={27} // Change the size to 30
+            color={filled ? "red" : "lightgray"}
+            onClick={onClick}
+        />
     )
-
 }
+
 
 export default Star;
 
