@@ -262,6 +262,18 @@ api.add_resource(CommentsById, "/comments/<int:id>")
 
 
 
+class UsersById(Resource):
+
+    def get(self, id):
+        user = User.query.filter_by(id=id).first()
+        return make_response(
+            user.to_dict(),
+            200
+        )
+    
+api.add_resource(UsersById, "/users/<int:id>")
+
+
 
 
 

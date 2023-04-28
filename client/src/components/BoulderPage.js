@@ -3,7 +3,6 @@ import { useUser } from "./context";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Draggable from 'react-draggable';
-// import StarRating from "./StarRating";
 import Star from "./Star";
 import {
     MDBCard,
@@ -52,36 +51,50 @@ function BoulderPage({ onChange }) {
 
 
     useEffect(() => {
-        fetch(`/boulders/${area}/${boulderId}`)
+      fetch(`/boulders/${area}/${boulderId}`)
         .then((r) => {
-            if (!r.ok) {
+          if (!r.ok) {
             throw new Error("Failed to fetch boulder data.");
-            }
-            return r.json();
+          }
+          return r.json();
         })
         .then((data) => {
           setBoulder(data);
-          setRating(data.rating || 0); //crucial line of code to set boulder.rating initially
-      })
+          setRating(data.rating || 0);
+        })
         .catch((error) => console.log(error));
-
     
-
-        
-        fetch(`/comments/${boulderId}`)
+      fetch(`/comments/${boulderId}`)
         .then((r) => r.json())
         .then((data) => {
-        
-            const commentsWithPermissions = data.map((comment) => ({
+          const commentsWithPermissions = data.map((comment) => ({
             ...comment,
             canEdit: comment.user_id === user.id,
             canDelete: comment.user_id === user.id,
-            }));
-            setComment(commentsWithPermissions);
+          }));
+    
+          // Add username to each comment object, good stuff here
+          const commentPromises = commentsWithPermissions.map((comment) =>
+            fetch(`/users/${comment.user_id}`).then((r) => r.json())
+          );
+          Promise.all(commentPromises)
+            .then((usernames) => {
+              const commentsWithUsernames = commentsWithPermissions.map(
+                (comment, index) => ({
+                  ...comment,
+                  username: usernames[index].username,
+                })
+              );
+              setComment(commentsWithUsernames);
+              
+            })
+            .catch((error) => console.log(error));
         })
         .catch((error) => console.log(error));
     }, [area, boulderId, user.id]);
     
+
+
 
     const handleEditComment = (comment) => {
         
@@ -171,7 +184,8 @@ fetch(`/comments/${id}`, {
 
 
 
-console.log(rating)
+
+  console.log(rating)
 
   return (
     <StyledWrapper>
@@ -201,6 +215,7 @@ console.log(rating)
         <p>{boulder.description}</p>
         </TextWrapper>
       </Container>
+
 
     <Draggable handle=".comment-handle">
       <MDBContainer className="mt-5" style={{ maxWidth: "1100px" }}>
@@ -265,7 +280,15 @@ console.log(rating)
                             </div>
                             ) : (
                                 
-                            <div className="d-flex flex-row align-items-center">
+                               <div className="d-flex flex-row align-items-center">
+                                <div>
+                                 {comment.user_id === user.id ? (
+                                  <small>Posted by you</small>
+                                ) : (
+                                  <small>Posted by {comment.username}</small>
+                              )}
+                              </div>
+
                                 <button className="btn btn ms-2" onClick={() => handleDeleteComment(comment.id)}>Remove Comment</button>
                                 <button
                                 type="button"
