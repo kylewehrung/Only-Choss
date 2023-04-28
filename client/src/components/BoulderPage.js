@@ -3,7 +3,8 @@ import { useUser } from "./context";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Draggable from 'react-draggable';
-import StarRating from "./StarRating";
+// import StarRating from "./StarRating";
+import Star from "./Star";
 import {
     MDBCard,
     MDBCardBody,
@@ -17,14 +18,37 @@ import {
 
 
 
-function BoulderPage() {
+function BoulderPage({ onChange }) {
     const [boulder, setBoulder] = useState({});
     const [comment, setComment] = useState([]);
     const [newComment, setNewComment] = useState(""); 
     const [editComment, setEditComment] = useState(null);
     const { area, boulderId } = useParams();
     const { user } = useUser();
-    // const [rating, setRating] = useState(boulder.rating || 0);
+    const [rating, setRating] = useState(boulder.rating || 0);
+  
+
+
+    function handleRatingChange(value) {
+      setRating(value)
+      fetch(`/boulders/${boulderId}`, {
+        method: "PATCH",
+        headers: {
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          rating: value,
+        }),
+      })
+      .then((r) => {
+        if (!r.ok) {
+          throw new Error("Failed to update boulder rating.")
+        }
+      })
+      .catch((error) => console.log(error))
+    }
+
+
 
 
     useEffect(() => {
@@ -35,12 +59,15 @@ function BoulderPage() {
             }
             return r.json();
         })
-        .then(setBoulder)
+        .then((data) => {
+          setBoulder(data);
+          setRating(data.rating || 0); //crucial line of code to set boulder.rating initially
+      })
         .catch((error) => console.log(error));
 
+    
+
         
-
-
         fetch(`/comments/${boulderId}`)
         .then((r) => r.json())
         .then((data) => {
@@ -54,6 +81,7 @@ function BoulderPage() {
         })
         .catch((error) => console.log(error));
     }, [area, boulderId, user.id]);
+    
 
     const handleEditComment = (comment) => {
         
@@ -141,7 +169,9 @@ fetch(`/comments/${id}`, {
 }
 
 
-  console.log(boulder.rating)
+
+
+console.log(rating)
 
   return (
     <StyledWrapper>
@@ -154,7 +184,17 @@ fetch(`/comments/${id}`, {
         <h5><strong>Choss Rating:</strong></h5>
         {boulder.rating && (
         <p>
-          <StarRating value={parseInt(boulder.rating)} />
+        <span>
+        
+        {[0, 1, 2].map((value) => (
+          <Star
+            key={value}
+            filled={value < rating}
+            onClick={() => handleRatingChange(value + 1)}
+          />
+        ))}
+      </span>
+
         </p>
           )}
         <h5><strong>Description:</strong></h5>

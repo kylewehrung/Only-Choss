@@ -2,7 +2,8 @@ import React from 'react';
 import { BiBandAid } from "react-icons/bi";
 
 
-function Star({ filled, onClick }) {
+function Star({ filled, onClick, onHover }) {
+    
     return (
         <BiBandAid 
             size={27} // Change the size to 30
