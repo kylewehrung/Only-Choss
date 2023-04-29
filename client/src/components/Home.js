@@ -88,7 +88,7 @@ function Home() {
 }
 
 
-const StyledBox = styled(Box)`
+const StyledBox = styled.div`
   position: relative;
   background: transparent;
 `;
@@ -97,7 +97,8 @@ const StyledPopoverButton = styled(Button)`
   position: absolute;
   top: 0;
   right: 0;
-  margin-right: 10px;
+  margin-right: -15px;
+  padding: 13px;
  
 `;
 export default Home;
