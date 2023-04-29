@@ -175,6 +175,7 @@ api.add_resource(BoulderByArea, "/boulders/<string:area>")
 
 
 
+
 class BouldersById(Resource):
     
     def get(self, area, id):
@@ -184,6 +185,27 @@ class BouldersById(Resource):
             boulder, 
             200
         )
+    
+
+    
+    def patch(self, id):
+
+        boulder = Boulder.query.filter_by(id=id).first()
+        data = request.get_json()
+
+        for attr in data:
+            setattr(boulder, attr, data[attr]) 
+
+        db.session.add(boulder)
+        db.session.commit()
+
+        return make_response(
+            boulder.to_dict(),
+            202
+        )
+
+
+
 
 api.add_resource(BouldersById, "/boulders/<string:area>/<int:id>")
 

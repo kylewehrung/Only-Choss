@@ -16,9 +16,15 @@ function NavBar({ user, setUser }) {
 
   const location = useLocation();
   const isBoulderPage = location.pathname.startsWith("/boulders");
-  
-  const isChossPage = location.pathname.startsWith("/boulders")
-  const addChossButton = isChossPage && <Button  variant="outline" as={Link} to="/boulders/:area/:boulderId/:add-choss">Add Choss</Button>;
+
+  // Use a regular expression to extract :area and :boulderId values from the current URL
+  const [_, area, boulderId] = location.pathname.match(/^\/boulders\/([^/]+)\/([^/]+)/) || [];
+
+  const isChossPage = location.pathname.startsWith("/boulders");
+  const addChossButton = isChossPage && <Button variant="outline" as={Link} to={`/boulders/${area}/${boulderId}/add-choss`}>Add Choss</Button>;
+
+  // const boulderPageOnly = location.pathname.startsWith(`/boulders/${area}/${boulderId}`);
+  // const addEditPage = boulderPageOnly && <Button variant="outline" as={Link} to={`/boulders/${area}/${boulderId}/edit-choss`}>Edit Choss</Button>;
 
   return (
     <Wrapper>
@@ -26,6 +32,7 @@ function NavBar({ user, setUser }) {
         <Link to="/">Only Choss</Link>
       </Logo>
       <Nav>
+        {/* {addEditPage} */}
         {addChossButton}
         <Button variant="outline" onClick={() => history.goBack()}>
           Go Back

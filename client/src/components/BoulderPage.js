@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Draggable from 'react-draggable';
 import Star from "./Star";
+import { Button } from "../styles";
+import EditChoss from "./EditChoss";
 import {
     MDBCard,
     MDBCardBody,
@@ -25,6 +27,7 @@ function BoulderPage({ onChange }) {
     const { area, boulderId } = useParams();
     const { user } = useUser();
     const [rating, setRating] = useState(boulder.rating || 0);
+    
   
 
 
@@ -188,8 +191,18 @@ fetch(`/comments/${id}`, {
   console.log(rating)
 
   return (
+    
     <StyledWrapper>
       <Container>
+   <div class="dropdown">
+  <Button variant="outline" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Dropdown
+  </Button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+    <button class="dropdown-item" type="button">{ <EditChoss area={area} boulderId={boulderId}/>}</button>
+   
+  </div>
+</div>
         <h1 className="h1">{boulder.name}</h1>
         <Image src={boulder.image} alt="boulders" />
         <TextWrapper>
