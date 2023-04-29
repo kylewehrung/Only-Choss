@@ -1,36 +1,114 @@
-import React from "react";
+import React, { useState } from "react";
 
 
 
-function EditChoss({ area, boulderId }) {
-
+function EditChoss({ boulderId, onUpdate }) {
+    const [name, setName] = useState("")
+    const [grade, setGrade] = useState("")
+    const [description, setDescription] = useState("")
+    const [image, setImage] = useState("")
 
 
   
+    const handleUpdateBoulder = (e) => {
+        e.preventDefault();
+        const body = {};
+        if (name) {
+          body.name = name;
+        }
+        if (grade) {
+          body.grade = grade;
+        }
+        if (description) {
+          body.description = description;
+        }
+        if (image) {
+          body.image = image;
+        }
+        fetch(`/boulders/${boulderId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        })
+          .then((r) => {
+            if (r.ok) {
+                onUpdate();
+                setName("");
+                setGrade("");
+                setDescription("");
+                setImage("");
+            } else {
+              r.json().then((err) => (err));
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      };
+      
+          
+
+
 return (
-<>
-  <h1>hello</h1>
 
-<form class="dropdown-menu p-4">
+  
+<form onSubmit={handleUpdateBoulder} class="edit-choss-form p-4">
   <div class="form-group">
-    <label for="exampleDropdownFormEmail2">Email address</label>
-    <input type="email" class="form-control" id="exampleDropdownFormEmail2" placeholder="email@example.com"/>
+    <label for="exampleDropdownFormEmail2">Name</label>
+    <input 
+    type="text" 
+    class="form-control" 
+    id="text" 
+    placeholder=""
+    value={name}
+    onChange={(e) => setName(e.target.value)}
+
+    />
   </div>
   <div class="form-group">
-    <label for="exampleDropdownFormPassword2">Password</label>
-    <input type="password" class="form-control" id="exampleDropdownFormPassword2" placeholder="Password"/>
+    <label for="exampleDropdownFormPassword2">Grade</label>
+    <input 
+    type="text" 
+    class="form-control" 
+    id="text" 
+    placeholder=""
+    value={grade}
+    onChange={(e) => setGrade(e.target.value)}
+
+    />
   </div>
-  <div class="form-check">
-    <input type="checkbox" class="form-check-input" id="dropdownCheck2"/>
-    <label class="form-check-label" for="dropdownCheck2">
-      Remember me
-    </label>
+
+  <div class="form-group">
+    <label for="exampleDropdownFormPassword2">Description</label>
+    <textArea 
+    type="text" 
+    class="form-control"
+    rows="2"
+    id="text" 
+    placeholder=""
+    value={description}
+    onChange={(e) => setDescription(e.target.value)}
+
+    />
   </div>
-  <button type="submit" class="btn btn-primary">Sign in</button>
+
+  <div class="form-group">
+    <label for="exampleDropdownFormPassword2">Image</label>
+    <textArea 
+    type="text" 
+    class="form-control"
+    rows="2" 
+    id="text" 
+    placeholder=""
+    value={image}
+    onChange={(e) => setImage(e.target.value)}
+
+    />
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
 </form>
-
-</>
-
 
 )
 

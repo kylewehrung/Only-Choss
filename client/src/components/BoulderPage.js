@@ -27,6 +27,7 @@ function BoulderPage({ onChange }) {
     const { area, boulderId } = useParams();
     const { user } = useUser();
     const [rating, setRating] = useState(boulder.rating || 0);
+    const [boulderUpdated, setBoulderUpdated] = useState(false);
     
   
 
@@ -94,8 +95,13 @@ function BoulderPage({ onChange }) {
             .catch((error) => console.log(error));
         })
         .catch((error) => console.log(error));
-    }, [area, boulderId, user.id]);
+    }, [area, boulderId, user.id, boulderUpdated]);
     
+
+    //this as well as 'boulderUpdated' help so I don't need to refresh upon submit when editing boulder.
+    const handleUpdateBoulder = () => {
+      setBoulderUpdated(true);
+    };
 
 
 
@@ -194,15 +200,21 @@ fetch(`/comments/${id}`, {
     
     <StyledWrapper>
       <Container>
-   <div class="dropdown">
-  <Button variant="outline" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Dropdown
-  </Button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-    <button class="dropdown-item" type="button">{ <EditChoss area={area} boulderId={boulderId}/>}</button>
-   
-  </div>
-</div>
+      {boulder ? (
+      <div class="dropdown-edit-form">
+        <Button variant="outline" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Edit Boulder
+        </Button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+          <div>
+            <EditChoss area={area} boulderId={boulderId} onUpdate={handleUpdateBoulder}/>
+          </div>
+        </div>
+      </div>
+      ) : (
+        <p>Loading...</p>
+      )}
+
         <h1 className="h1">{boulder.name}</h1>
         <Image src={boulder.image} alt="boulders" />
         <TextWrapper>
@@ -350,7 +362,7 @@ const Container = styled.div`
 `;
 
 const Image = styled.img`
-  max-width: 450px;
+  max-width: 370px;
   height: auto;
   object-fit: cover;
   margin-bottom: 13px;

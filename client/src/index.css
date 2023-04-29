@@ -88,3 +88,40 @@ code {
   .dropdown-menu > li:hover > .dropdown-submenu {
   display: block;
   }
+
+
+  .dropdown-edit-form {
+    position: relative;
+    left: 510px;
+    top: -71px;
+    z-index: 2;
+  }
+
+
+  .dropdown-menu > div {
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    width: 275px;
+  }
+
+
+
+  .dropdown-menu .edit-choss-form {
+    display: block;
+    
+    
+  }
+  
+  
+
+
+
+
+
+
+
+
