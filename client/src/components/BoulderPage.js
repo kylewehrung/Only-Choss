@@ -3,7 +3,7 @@ import { useUser } from "./context";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Draggable from 'react-draggable';
-import StarRating from "./StarRating";
+import Star from "./Star";
 import {
     MDBCard,
     MDBCardBody,
@@ -17,43 +17,84 @@ import {
 
 
 
-function BoulderPage() {
+function BoulderPage({ onChange }) {
     const [boulder, setBoulder] = useState({});
     const [comment, setComment] = useState([]);
     const [newComment, setNewComment] = useState(""); 
     const [editComment, setEditComment] = useState(null);
     const { area, boulderId } = useParams();
     const { user } = useUser();
-    // const [rating, setRating] = useState(boulder.rating || 0);
+    const [rating, setRating] = useState(boulder.rating || 0);
+  
+
+
+    function handleRatingChange(value) {
+      setRating(value)
+      fetch(`/boulders/${boulderId}`, {
+        method: "PATCH",
+        headers: {
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          rating: value,
+        }),
+      })
+      .then((r) => {
+        if (!r.ok) {
+          throw new Error("Failed to update boulder rating.")
+        }
+      })
+      .catch((error) => console.log(error))
+    }
+
+
 
 
     useEffect(() => {
-        fetch(`/boulders/${area}/${boulderId}`)
+      fetch(`/boulders/${area}/${boulderId}`)
         .then((r) => {
-            if (!r.ok) {
+          if (!r.ok) {
             throw new Error("Failed to fetch boulder data.");
-            }
-            return r.json();
+          }
+          return r.json();
         })
-        .then(setBoulder)
+        .then((data) => {
+          setBoulder(data);
+          setRating(data.rating || 0);
+        })
         .catch((error) => console.log(error));
-
-        
-
-
-        fetch(`/comments/${boulderId}`)
+    
+      fetch(`/comments/${boulderId}`)
         .then((r) => r.json())
         .then((data) => {
-        
-            const commentsWithPermissions = data.map((comment) => ({
+          const commentsWithPermissions = data.map((comment) => ({
             ...comment,
             canEdit: comment.user_id === user.id,
             canDelete: comment.user_id === user.id,
-            }));
-            setComment(commentsWithPermissions);
+          }));
+    
+          // Add username to each comment object, good stuff here
+          const commentPromises = commentsWithPermissions.map((comment) =>
+            fetch(`/users/${comment.user_id}`).then((r) => r.json())
+          );
+          Promise.all(commentPromises)
+            .then((usernames) => {
+              const commentsWithUsernames = commentsWithPermissions.map(
+                (comment, index) => ({
+                  ...comment,
+                  username: usernames[index].username,
+                })
+              );
+              setComment(commentsWithUsernames);
+              
+            })
+            .catch((error) => console.log(error));
         })
         .catch((error) => console.log(error));
     }, [area, boulderId, user.id]);
+    
+
+
 
     const handleEditComment = (comment) => {
         
@@ -141,7 +182,10 @@ fetch(`/comments/${id}`, {
 }
 
 
-  console.log(boulder.rating)
+
+
+
+  console.log(rating)
 
   return (
     <StyledWrapper>
@@ -154,13 +198,24 @@ fetch(`/comments/${id}`, {
         <h5><strong>Choss Rating:</strong></h5>
         {boulder.rating && (
         <p>
-          <StarRating value={parseInt(boulder.rating)} />
+        <span>
+        
+        {[0, 1, 2].map((value) => (
+          <Star
+            key={value}
+            filled={value < rating}
+            onClick={() => handleRatingChange(value + 1)}
+          />
+        ))}
+      </span>
+
         </p>
           )}
         <h5><strong>Description:</strong></h5>
         <p>{boulder.description}</p>
         </TextWrapper>
       </Container>
+
 
     <Draggable handle=".comment-handle">
       <MDBContainer className="mt-5" style={{ maxWidth: "1100px" }}>
@@ -225,7 +280,15 @@ fetch(`/comments/${id}`, {
                             </div>
                             ) : (
                                 
-                            <div className="d-flex flex-row align-items-center">
+                               <div className="d-flex flex-row align-items-center">
+                                <div>
+                                 {comment.user_id === user.id ? (
+                                  <small>Posted by you</small>
+                                ) : (
+                                  <small>Posted by {comment.username}</small>
+                              )}
+                              </div>
+
                                 <button className="btn btn ms-2" onClick={() => handleDeleteComment(comment.id)}>Remove Comment</button>
                                 <button
                                 type="button"
