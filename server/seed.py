@@ -13,7 +13,7 @@ with app.app_context():
 
     users = []
     usernames = []
-    names = ['kyle-cant-climb','Alex Puccio','CeCe','Matt Fultz','Aiden Roberts','ham','Melissa', '2009', 'Mac Miller', 'turkey', "JID", "J-Cole", "Austin Reeves", "clime timb", "oww", "hmmm", "orange julius", "pin", "finger ripper", "punk rock", "south line", "Spice Roof"]
+    names = ['kyle-cant-climb','Alex Puccio','CeCe','Matt Fultz','Aiden Roberts','ham','Melissa', 'choss-lover', 'Mac Miller', 'turkey', "JID", "J-Cole", "Austin Reeves", "clime timb", "oww", "hmmm", "Carlsbad", "pin", "finger ripper", "punk rock", "south line", "Spice Roof"]
 
     for i in range(22):
         username = names[i]
