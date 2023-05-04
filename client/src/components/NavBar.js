@@ -19,6 +19,7 @@ function NavBar({ user, setUser }) {
   
   const isChossPage = location.pathname.startsWith("/boulders")
   const addChossButton = isChossPage && <Button  variant="outline" as={Link} to="/boulders/:area/:boulderId/:add-choss">Add Choss</Button>;
+  
 
   return (
     <Wrapper>
@@ -47,7 +48,7 @@ const Wrapper = styled.header`
   top: 0;
   left: 0;
   right: 0;
-  z-index: 999;
+  z-index: 1;
 `;
 
 const Logo = styled.h1`

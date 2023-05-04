@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Draggable from 'react-draggable';
 import Star from "./Star";
+import { Button } from "../styles";
+import EditChoss from "./EditChoss";
 import {
     MDBCard,
     MDBCardBody,
@@ -25,6 +27,8 @@ function BoulderPage({ onChange }) {
     const { area, boulderId } = useParams();
     const { user } = useUser();
     const [rating, setRating] = useState(boulder.rating || 0);
+    const [boulderUpdated, setBoulderUpdated] = useState(false);
+    
   
 
 
@@ -91,8 +95,13 @@ function BoulderPage({ onChange }) {
             .catch((error) => console.log(error));
         })
         .catch((error) => console.log(error));
-    }, [area, boulderId, user.id]);
+    }, [area, boulderId, user.id, boulderUpdated]);
     
+
+    //this as well as 'boulderUpdated' help so I don't need to refresh upon submit when editing boulder.
+    const handleUpdateBoulder = () => {
+      setBoulderUpdated(true);
+    };
 
 
 
@@ -188,8 +197,24 @@ fetch(`/comments/${id}`, {
   console.log(rating)
 
   return (
+    
     <StyledWrapper>
       <Container>
+      {boulder ? (
+      <div class="dropdown-edit-form">
+        <Button variant="outline" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Edit Boulder
+        </Button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+          <div>
+            <EditChoss area={area} boulderId={boulderId} onUpdate={handleUpdateBoulder}/>
+          </div>
+        </div>
+      </div>
+      ) : (
+        <p>Loading...</p>
+      )}
+
         <h1 className="h1">{boulder.name}</h1>
         <Image src={boulder.image} alt="boulders" />
         <TextWrapper>
@@ -337,7 +362,7 @@ const Container = styled.div`
 `;
 
 const Image = styled.img`
-  max-width: 450px;
+  max-width: 370px;
   height: auto;
   object-fit: cover;
   margin-bottom: 13px;

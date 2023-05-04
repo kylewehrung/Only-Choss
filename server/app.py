@@ -175,6 +175,7 @@ api.add_resource(BoulderByArea, "/boulders/<string:area>")
 
 
 
+
 class BouldersById(Resource):
     
     def get(self, area, id):
@@ -184,6 +185,7 @@ class BouldersById(Resource):
             boulder, 
             200
         )
+    
 
 api.add_resource(BouldersById, "/boulders/<string:area>/<int:id>")
 
