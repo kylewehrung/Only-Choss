@@ -6,7 +6,7 @@ function Star({ filled, onClick, onHover }) {
     
     return (
         <BiBandAid 
-            size={27} // Change the size to 30
+            size={28} // Change the size to 30
             color={filled ? "red" : "lightgray"}
             onClick={onClick}
         />
