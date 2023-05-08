@@ -9,12 +9,15 @@ import * as yup from "yup";
 function SignUpForm({ onLogin }) {
 
     const validationSchema = yup.object({
-        username: yup.string().required(),
+        username: yup.string().required().matches(/^\S+$/, "Username must be one word with no spaces")
+        .min(2, "Username must be at least 2 characters long")
+        .max(16, "Username must be at most 16 characters long"),
         password: yup.string().required(),
         passwordConfirmation: yup
         .string()
         .oneOf([yup.ref("password"), null], "Passwords must match")
-        .required(),
+        .required().min(4, "Password must be at least 2 characters long")
+        .max(16, "Password must be at most 16 characters long"),
     });
 
     const formik = useFormik({
