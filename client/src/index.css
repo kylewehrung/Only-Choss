@@ -92,7 +92,7 @@ code {
 
   .dropdown-edit-form {
     position: absolute;
-    left: 1324px;
+    left: 1375px;
     top: -71px;
     z-index: 2;
   }
@@ -112,8 +112,9 @@ code {
 
   .dropdown-menu .edit-choss-form {
     display: block;
-    
-    
+    /* position: absolute;
+    left: 50px;
+     */
   }
   
   
