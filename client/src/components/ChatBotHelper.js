@@ -24,12 +24,13 @@ const ChatBotHelper = () => {
           const search = steps.search.value;
           const endpoint = encodeURI('https://dbpedia.org');
           const query = encodeURI(`
-            select * where {
-            ?x rdfs:label "${search}"@en .
+          select * where {
+            ?x rdfs:label ?label .
             ?x rdfs:comment ?comment .
-            FILTER (lang(?comment) = 'en')
-            } LIMIT 100
-          `);
+            FILTER (lang(?comment) = 'en' && regex(str(?label), "${search}", "i"))
+          } LIMIT 100
+        `);
+        
       
           const queryUrl = `https://dbpedia.org/sparql/?default-graph-uri=${endpoint}&query=${query}&format=json`;
       
@@ -39,16 +40,20 @@ const ChatBotHelper = () => {
       
           function readyStateChange() {
             if (this.readyState === 4) {
-              const data = JSON.parse(this.responseText);
-              const bindings = data.results.bindings;
-              if (bindings && bindings.length > 0) {
-                self.setState({  result: bindings[0].comment.value });
+              if (this.status === 200) {
+                const data = JSON.parse(this.responseText);
+                const bindings = data.results.bindings;
+                if (bindings && bindings.length > 0) {
+                  self.setState({ result: bindings[0].comment.value });
+                } else {
+                  self.setState({ result: 'Not found.' });
+                }
               } else {
-                self.setState({  result: 'Not found.' });
+                self.setState({ result: 'Error occurred while fetching data.' });
               }
             }
           }
-      
+          
           xhr.open('GET', queryUrl);
           xhr.send();
         }
@@ -144,6 +149,8 @@ const ChatBotHelper = () => {
         trigger: '2',
       },
   ];
+
+
 
 
 
