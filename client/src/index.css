@@ -96,8 +96,7 @@ code {
     top: -71px;
     z-index: 2;
   }
-
-
+  
   .dropdown-menu > div {
     position: relative;
     left: 0;
@@ -106,7 +105,9 @@ code {
     height: 100%;
     padding: 10px;
     width: 275px;
+    background-color: #f4f6ff; 
   }
+  
 
 
 
