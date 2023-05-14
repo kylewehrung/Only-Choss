@@ -1,6 +1,5 @@
 import React from "react"
 import ChatBot from 'react-simple-chatbot';
-import BotRedirect from "./BotRedirect";
 import { ThemeProvider } from "styled-components";
 import PropTypes from 'prop-types';
 
@@ -115,14 +114,14 @@ const ChatBotHelper = () => {
     {
       id: '3',
       options: [
-        // Add more options for different user queries
+       
         { value: 3, label: 'Ask about pricing', trigger: '6' },
         { value: 4, label: 'Inquire about support', trigger: '7' },
-        { value: 5, label: 'Type something to search on Wikipédia. (Ex.: Brazil)', trigger: 'search' }
+        { value: 5, label: 'Type something to search on Wikipédia. (Ex.: Climbing)', trigger: 'search' }
       ]
     },
     
-    // Add more steps to handle different user queries
+    
     {
       id: '6',
       message: 'Our pricing varies depending on the features and usage. Please visit our pricing page for more details.',
