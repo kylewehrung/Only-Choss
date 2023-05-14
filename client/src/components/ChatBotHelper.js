@@ -115,21 +115,15 @@ const ChatBotHelper = () => {
       id: '3',
       options: [
        
-        { value: 3, label: 'Ask about pricing', trigger: '6' },
-        { value: 4, label: 'Inquire about support', trigger: '7' },
-        { value: 5, label: 'Type something to search on Wikipédia. (Ex.: Climbing)', trigger: 'search' }
+        { value: 3, label: 'What is bouldering?', trigger: '6' },
+        { value: 4, label: 'Type something to search on Wikipédia. (Ex.: Climbing)', trigger: 'search' }
       ]
     },
     
     
     {
       id: '6',
-      message: 'Our pricing varies depending on the features and usage. Please visit our pricing page for more details.',
-      trigger: '2'
-    },
-    {
-      id: '7',
-      message: 'We provide support through our help center and email. How can I assist you further?',
+      message: 'Bouldering is a form of climbing that is performed on small rock formations or artificial rock walls without the use of ropes or harnesses. While bouldering can be done without any equipment, most climbers use climbing shoes to help secure footholds, chalk to keep their hands dry and to provide a firmer grip, and bouldering mats to prevent injuries from falls.',
       trigger: '2'
     },
     
