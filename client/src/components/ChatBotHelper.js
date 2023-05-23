@@ -4,6 +4,7 @@ import BotRedirect from "./BotRedirect";
 import { ThemeProvider } from "styled-components";
 import PropTypes from 'prop-types';
 
+
 const ChatBotHelper = () => {
     class DBPedia extends React.Component {
         constructor(props) {
@@ -18,45 +19,38 @@ const ChatBotHelper = () => {
           this.triggetNext = this.triggetNext.bind(this);
         }
       
-        componentWillMount() {
-          const self = this;
-          const { steps } = this.props;
-          const search = steps.search.value;
-          const endpoint = encodeURI('https://dbpedia.org');
-          const query = encodeURI(`
-          select * where {
-            ?x rdfs:label ?label .
-            ?x rdfs:comment ?comment .
-            FILTER (lang(?comment) = 'en' && regex(str(?label), "${search}", "i"))
-          } LIMIT 100
-        `);
-        
-      
-          const queryUrl = `https://dbpedia.org/sparql/?default-graph-uri=${endpoint}&query=${query}&format=json`;
-      
-          const xhr = new XMLHttpRequest();
-      
-          xhr.addEventListener('readystatechange', readyStateChange);
-      
-          function readyStateChange() {
-            if (this.readyState === 4) {
-              if (this.status === 200) {
-                const data = JSON.parse(this.responseText);
+        componentDidMount() {
+            const { steps } = this.props;
+            const search = steps.search.value;
+            const endpoint = 'https://dbpedia.org/sparql';
+            const query = `
+            select * where {
+              ?x rdfs:label ?label .
+              ?x rdfs:comment ?comment .
+              FILTER (lang(?comment) = 'en' && regex(str(?label), "${search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')}", "i"))
+            } LIMIT 100
+          `;
+          
+          
+          const queryUrl = `${endpoint}/?default-graph-uri=&query=${encodeURIComponent(query)}&format=json`;
+
+          
+            fetch(queryUrl)
+              .then(response => response.json())
+              .then(data => {
                 const bindings = data.results.bindings;
                 if (bindings && bindings.length > 0) {
-                  self.setState({ result: bindings[0].comment.value });
+                  this.setState({ result: bindings[0].comment.value });
                 } else {
-                  self.setState({ result: 'Not found.' });
+                  this.setState({ result: 'Not found.' });
                 }
-              } else {
-                self.setState({ result: 'Error occurred while fetching data.' });
-              }
-            }
+              })
+              .catch(error => {
+                console.error('Error occurred while fetching data:', error);
+                this.setState({ result: 'Error occurred while fetching data.' });
+              });
           }
           
-          xhr.open('GET', queryUrl);
-          xhr.send();
-        }
       
         triggetNext() {
           this.setState({ trigger: true }, () => {
@@ -64,6 +58,7 @@ const ChatBotHelper = () => {
           });
         }
       
+
         render() {
           const { trigger, result } = this.state;
       
@@ -102,6 +97,8 @@ const ChatBotHelper = () => {
         steps: undefined,
         triggerNextStep: undefined,
       };
+
+
 
 
   const steps = [
