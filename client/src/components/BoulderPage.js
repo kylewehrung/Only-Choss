@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useUser } from "./context";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -188,7 +188,32 @@ fetch(`/comments/${id}`, {
     .catch((error) => console.log(error));
 }
 
+   // Create a ref to the draggable section
+   const draggableRef = useRef();
 
+   // Calculate the screen boundaries
+   useEffect(() => {
+     const handleResize = () => {
+       const draggableNode = draggableRef.current;
+       const { width, height } = draggableNode.getBoundingClientRect();
+       const { innerWidth, innerHeight } = window;
+
+      // Calculate the maximum position values to constrain the draggable section
+      const maxX = innerWidth - width;
+      const maxY = innerHeight - height;
+
+      // Update the bounds dynamically
+      draggableNode.updateBounds({ left: 0, top: 0, right: maxX, bottom: maxY });
+    };
+
+        // Add event listener for window resize
+        window.addEventListener("resize", handleResize);
+
+        // Cleanup
+        return () => {
+          window.removeEventListener("resize", handleResize);
+        };
+      }, []);
 
 
 
@@ -240,8 +265,12 @@ fetch(`/comments/${id}`, {
       </Container>
 
 
-    <Draggable handle=".comment-handle">
-      <MDBContainer className="mt-5" style={{ maxWidth: "1100px" }}>
+      <Draggable
+        handle=".comment-handle"
+        bounds="parent"
+        ref={draggableRef} // Assign the ref to the draggable section
+      >
+      <MDBContainer className="mt-5" style={{ maxWidth: "1100px" }} >
       <div className="comment-handle"><strong>drag me</strong></div>
         <MDBRow className="justify-content-center">
           <MDBCol md="8" lg="6">
