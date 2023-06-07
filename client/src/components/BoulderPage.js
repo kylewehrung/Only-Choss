@@ -17,7 +17,7 @@ import {
 
 
 
-function BoulderPage({ onChange }) {
+function BoulderPage( ) {
     const [boulder, setBoulder] = useState({});
     const [comment, setComment] = useState([]);
     const [newComment, setNewComment] = useState(""); 
