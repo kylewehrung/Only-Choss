@@ -22,14 +22,15 @@ function BoulderPage( ) {
     const [comment, setComment] = useState([]);
     const [newComment, setNewComment] = useState(""); 
     const [editComment, setEditComment] = useState(null);
+    const [boulderUpdated, setBoulderUpdated] = useState(false);
+    const [isImageClicked, setIsImageClicked] = useState(false)
     const { area, boulderId } = useParams();
     const { user } = useUser();
     const [rating, setRating] = useState(boulder.rating || 0);
-    const [boulderUpdated, setBoulderUpdated] = useState(false);
     
   
 
-
+    //handle rating change
     function handleRatingChange(value) {
       setRating(value)
       fetch(`/boulders/${boulderId}`, {
@@ -51,7 +52,7 @@ function BoulderPage( ) {
 
 
 
-
+    //load boulder info on page launch
     useEffect(() => {
       fetch(`/boulders/${area}/${boulderId}`)
         .then((r) => {
@@ -66,6 +67,8 @@ function BoulderPage( ) {
         })
         .catch((error) => console.log(error));
     
+
+      //load comment info as well as user info
       fetch(`/comments/${boulderId}`)
         .then((r) => r.json())
         .then((data) => {
@@ -75,6 +78,7 @@ function BoulderPage( ) {
             canDelete: comment.user_id === user.id,
           }));
     
+
           // Add username to each comment object, good stuff here
           const commentPromises = commentsWithPermissions.map((comment) =>
             fetch(`/users/${comment.user_id}`).then((r) => r.json())
@@ -102,7 +106,7 @@ function BoulderPage( ) {
     };
 
 
-
+    //edit comment
     const handleEditComment = (comment) => {
         
         if (comment.user_id === user.id) {
@@ -141,7 +145,7 @@ function BoulderPage( ) {
     };
 
 
-    
+    //submit commit
     const handleSubmit = (e) => {
         e.preventDefault();
         fetch(`/comments/${boulderId}`, {
@@ -166,7 +170,7 @@ function BoulderPage( ) {
 
 
 
-
+//handle deleting comments
 function handleDeleteComment(id) {
 const commentToDelete = comment.find((comm) => comm.id === id);
 
@@ -189,9 +193,14 @@ fetch(`/comments/${id}`, {
 }
 
 
+//image enlarge
+const handleImageClick = () => {
+  setIsImageClicked(!isImageClicked)
+}
 
 
-  console.log(rating)
+
+
 
   return (
     
@@ -212,8 +221,22 @@ fetch(`/comments/${id}`, {
         <p>Loading...</p>
       )}
 
+
         <h1 className="h1">{boulder.name}</h1>
-        <Image src={boulder.image} alt="boulders" />
+        <ImageWrapper>
+        {isImageClicked && (
+          <EnlargedImage src={boulder.image} alt="boulders" 
+            onClick={handleImageClick}
+          />
+        )}
+        <Image 
+        src={boulder.image} 
+        alt="boulders" 
+        onClick={handleImageClick}
+        />
+        </ImageWrapper>
+        
+
         <TextWrapper>
         <h5><strong>Grade:</strong></h5>
         <p >{boulder.grade}</p>
@@ -360,6 +383,14 @@ const Container = styled.div`
   top: 80px;
 `;
 
+
+
+const ImageWrapper = styled.div`
+  position: relative;
+`;
+
+
+
 const Image = styled.img`
   max-width: 370px;
   height: auto;
@@ -368,6 +399,19 @@ const Image = styled.img`
   border: 1px solid black;
   box-shadow: 0 0 10px rgba(0,0,0, 0.3);
 `;
+
+
+
+const EnlargedImage = styled.img`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  width: 500px; /* Adjust the width to fit your needs */
+  height: auto; /* Adjust the height to fit your needs */
+`;
+
 
 
 const TextWrapper = styled.div`
