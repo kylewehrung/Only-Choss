@@ -4,102 +4,100 @@ import { ThemeProvider } from "styled-components";
 import PropTypes from 'prop-types';
 
 
-const ChatBotHelper = () => {
-    class DBPedia extends React.Component {
-        constructor(props) {
-          super(props);
-      
-          this.state = {
-            
-            result: '',
-            trigger: false,
-          };
-      
-          this.triggetNext = this.triggetNext.bind(this);
-        }
-      
-        componentDidMount() {
-            const { steps } = this.props;
-            const search = steps.search.value;
-            const endpoint = 'https://dbpedia.org/sparql';
-            const query = `
-            select * where {
-              ?x rdfs:label ?label .
-              ?x rdfs:comment ?comment .
-              FILTER (lang(?comment) = 'en' && regex(str(?label), "${search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')}", "i"))
-            } LIMIT 100
-          `;
-          
-          
-          const queryUrl = `${endpoint}/?default-graph-uri=&query=${encodeURIComponent(query)}&format=json`;
 
-          
-            fetch(queryUrl)
-              .then(response => response.json())
-              .then(data => {
-                const bindings = data.results.bindings;
-                if (bindings && bindings.length > 0) {
-                  this.setState({ result: bindings[0].comment.value });
-                } else {
-                  this.setState({ result: 'Not found.' });
-                }
-              })
-              .catch(error => {
-                console.error('Error occurred while fetching data:', error);
-                this.setState({ result: 'Error occurred while fetching data.' });
-              });
-          }
-          
-      
-        triggetNext() {
-          this.setState({ trigger: true }, () => {
-            this.props.triggerNextStep();
-          });
-        }
-      
 
-        render() {
-          const { trigger, result } = this.state;
-      
-          return (
-            <div className="dbpedia">
-              {result }
-              {
-                
-                <div
-                  style={{
-                    textAlign: 'center',
-                    marginTop: 20,
-                  }}
-                >
-                  {
-                    !trigger &&
-                    <button
-                      onClick={() => this.triggetNext()}
-                    >
-                      Search Again
-                    </button>
-                  }
-                </div>
-              }
-            </div>
-          );
+const buildQuery = (search) => {
+  return `
+    SELECT * WHERE {
+      ?x rdfs:label ?label .
+      ?x rdfs:comment ?comment .
+      FILTER (regex(str(?label), "${search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')}", "i"))
+    }
+    LIMIT 100
+  `;
+};
+
+
+
+
+
+class DBPedia extends React.Component {
+  state = {
+    result: '',
+    trigger: false,
+  };
+
+  triggetNext = () => {
+    this.setState({ trigger: true }, () => {
+      this.props.triggerNextStep();
+    });
+  };
+
+  componentDidMount() {
+    const { steps } = this.props;
+    const search = steps.search.value;
+    const endpoint = 'https://dbpedia.org/sparql';
+    const query = buildQuery(search);
+    const queryUrl = `${endpoint}/?default-graph-uri=&query=${encodeURIComponent(query)}&format=json`;
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch(queryUrl);
+        const data = await response.json();
+        const bindings = data.results.bindings;
+        if (bindings && bindings.length > 0) {
+          this.setState({ result: bindings[0].comment.value });
+        } else {
+          this.setState({ result: 'Not found.' });
         }
+      } catch (error) {
+        console.error('Error occurred while fetching data:', error);
+        this.setState({ result: 'Error occurred while fetching data.' });
       }
-      
-      DBPedia.propTypes = {
-        steps: PropTypes.object,
-        triggerNextStep: PropTypes.func,
-      };
-      
-      DBPedia.defaultProps = {
-        steps: undefined,
-        triggerNextStep: undefined,
-      };
+    };
 
+    fetchData();
+  }
 
+  render() {
+    const { trigger, result } = this.state;
 
+    return (
+      <div className="dbpedia">
+        {result}
+        {
+          <div
+            style={{
+              textAlign: 'center',
+              marginTop: 20,
+            }}
+          >
+            {
+              !trigger &&
+              <button
+                onClick={() => this.triggetNext()}
+              >
+                Search Again
+              </button>
+            }
+          </div>
+        }
+      </div>
+    );
+  }
+}
 
+DBPedia.propTypes = {
+  steps: PropTypes.object,
+  triggerNextStep: PropTypes.func,
+};
+
+DBPedia.defaultProps = {
+  steps: undefined,
+  triggerNextStep: undefined,
+};
+
+const ChatBotHelper = () => {
   const steps = [
     {
       id: '1',
@@ -140,11 +138,6 @@ const ChatBotHelper = () => {
       },
   ];
 
-
-
-
-
-
   return (
     <>
       <ThemeProvider theme={CHATBOT_THEME}>
@@ -152,7 +145,8 @@ const ChatBotHelper = () => {
       </ThemeProvider>
     </>
   );
-  }
+};
+
 
 
 
