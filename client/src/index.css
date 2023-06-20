@@ -99,9 +99,10 @@ code {
   }
 
 
+  
   .dropdown-edit-form {
     position: relative;
-    left: 514px;
+    left: 578px;
     top: -71px;
     z-index: 2;
   }
@@ -130,5 +131,15 @@ code {
 
   .pressed {
     transform: translateY(2px);
+  }
+
+
+
+
+  .rsc-float-button {
+    position: fixed !important;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
   }
   
