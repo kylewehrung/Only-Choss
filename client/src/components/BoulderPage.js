@@ -27,28 +27,59 @@ function BoulderPage( ) {
     const { area, boulderId } = useParams();
     const { user } = useUser();
     const [rating, setRating] = useState(boulder.rating || 0);
+    const [ratingCount, setRatingCount] = useState({
+      1: 0,
+      2: 0,
+      3: 0,
+    });
+    const [mostRated, setMostRated] = useState(0);
+    const [totalRatings, setTotalRatings] = useState(0);
+
+
+    
     
   
 
     //handle rating change
     function handleRatingChange(value) {
-      setRating(value)
+      setRating(value);
+      setRatingCount((prevCount) => ({
+        ...prevCount,
+        [value]: prevCount[value] + 1,
+      }));
+      setTotalRatings((prevTotal) => prevTotal + 1);
+    
       fetch(`/boulders/${boulderId}`, {
         method: "PATCH",
         headers: {
-        "Content-Type": "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           rating: value,
         }),
       })
-      .then((r) => {
-        if (!r.ok) {
-          throw new Error("Failed to update boulder rating.")
-        }
-      })
-      .catch((error) => console.log(error))
+        .then((r) => {
+          if (!r.ok) {
+            throw new Error("Failed to update boulder rating.");
+          }
+        })
+        .then(() => {
+          // Update the mostRated state based on the updated ratingCount
+          const maxRatingCount = Math.max(...Object.values(ratingCount));
+          const maxRated = Object.keys(ratingCount).find(
+            (key) => ratingCount[key] === maxRatingCount
+          );
+          setMostRated(parseInt(maxRated));
+        })
+        .catch((error) => console.log(error));
     }
+    
+    
+
+    const sumRatings =
+  ratingCount[1] * 1 + ratingCount[2] * 2 + ratingCount[3] * 3;
+const averageRating = totalRatings > 0 ? sumRatings / totalRatings : 0;
+
 
 
 
@@ -64,8 +95,11 @@ function BoulderPage( ) {
         .then((data) => {
           setBoulder(data);
           setRating(data.rating || 0);
+          setMostRated(data.rating || 0); // Set mostRated initially based on the fetched rating
         })
         .catch((error) => console.log(error));
+  
+    
     
 
       //load comment info as well as user info
@@ -97,7 +131,7 @@ function BoulderPage( ) {
             .catch((error) => console.log(error));
         })
         .catch((error) => console.log(error));
-    }, [area, boulderId, user.id, boulderUpdated]);
+      }, [area, boulderId, user.id, boulderUpdated]);
     
 
     //this as well as 'boulderUpdated' help so I don't need to refresh upon submit when editing boulder.
@@ -241,21 +275,28 @@ const handleImageClick = () => {
         <h5><strong>Grade:</strong></h5>
         <p >{boulder.grade}</p>
         <h5><strong>Choss Rating:</strong></h5>
-        {boulder.rating && (
-        <p>
-        <span>
-        
-        {[0, 1, 2].map((value) => (
-          <Star
-            key={value}
-            filled={value < rating}
-            onClick={() => handleRatingChange(value + 1)}
-          />
-        ))}
-      </span>
 
-        </p>
-          )}
+        {boulder.rating && (
+          <p>
+  <span>
+    {[0, 1, 2].map((value) => (
+      <Star
+        key={value}
+        filled={value < rating}
+        onClick={() => handleRatingChange(value + 1)}
+        highlighted={mostRated === value + 1}
+      />
+    ))}
+  </span>
+  <p>
+    Rating count: 1: {ratingCount[1]}, 2: {ratingCount[2]}, 3: {ratingCount[3]}
+  </p>
+  <p>Average rating: {averageRating.toFixed(1)}</p>
+</p>
+
+)}
+
+          
         <h5><strong>Description:</strong></h5>
         <p>{boulder.description}</p>
         </TextWrapper>
