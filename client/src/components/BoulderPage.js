@@ -34,6 +34,7 @@ import {
     const [mostRated, setMostRated] = useState(0);
     const [totalRatings, setTotalRatings] = useState(0);
     const [averageRating, setAverageRating] = useState(0);
+
   
     useEffect(() => {
       const sumRatings =
@@ -78,8 +79,6 @@ import {
         })
         .catch((error) => console.log(error));
     }
-    
-
 
 
 
@@ -96,9 +95,11 @@ import {
         .then((data) => {
           setBoulder(data);
           setRating(data.rating || 0);
+
           setMostRated(data.rating || 0);
         })
         .catch((error) => console.log(error));
+
 
 
 
@@ -130,8 +131,10 @@ import {
             .catch((error) => console.log(error));
         })
         .catch((error) => console.log(error));
+
     }, [area, boulderId, user.id, boulderUpdated]);
   
+
     const handleUpdateBoulder = () => {
       setBoulderUpdated(true);
     };
@@ -263,17 +266,21 @@ import {
         
 
         <TextWrapper>
+
   <h5><strong>Grade:</strong></h5>
   <p>{boulder.grade}</p>
   <h5><strong>Choss Rating:</strong></h5>
 
   {boulder.rating && (
     <p>
+
   <span>
     {[0, 1, 2].map((value) => (
       <Star
         key={value}
+
         filled={value < mostRated}
+
         onClick={() => handleRatingChange(value + 1)}
         highlighted={mostRated === value + 1}
       />
@@ -285,7 +292,9 @@ import {
   <p>Average rating: {averageRating.toFixed(1)}</p>
 </p>
 
+
   )}
+
 
 
 

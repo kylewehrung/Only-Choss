@@ -142,6 +142,10 @@ class Boulders(Resource):
 api.add_resource(Boulders, "/boulders")
 # Add the Boulders resource to the API with the specified URL endpoint
 
+
+
+
+
 class BoulderById(Resource):
     def patch(self, id):
         boulder = Boulder.query.filter_by(id=id).first()
@@ -167,6 +171,9 @@ class BoulderById(Resource):
 api.add_resource(BoulderById, "/boulders/<int:id>")
 # Add the BoulderById resource to the API with the specified URL endpoint
 
+
+
+
 class BoulderByArea(Resource):
     def get(self, area):
         boulders = Boulder.query.filter(Boulder.area == area).all()
@@ -177,6 +184,8 @@ class BoulderByArea(Resource):
 
 api.add_resource(BoulderByArea, "/boulders/<string:area>")
 # Add the BoulderByArea resource to the API with the specified URL endpoint
+
+
 
 
 
@@ -198,6 +207,14 @@ class BouldersById(Resource):
 
 api.add_resource(BouldersById, "/boulders/<string:area>/<int:id>")
 # Add the BouldersById resource to the API with the specified URL endpoint
+
+
+
+
+
+
+
+
 
 class Comments(Resource):
     
