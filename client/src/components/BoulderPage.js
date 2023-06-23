@@ -14,45 +14,77 @@ import {
     MDBInput,
     MDBRow,
   } from "mdb-react-ui-kit";
+  
 
-
-
-function BoulderPage( ) {
+  function BoulderPage() {
     const [boulder, setBoulder] = useState({});
     const [comment, setComment] = useState([]);
-    const [newComment, setNewComment] = useState(""); 
+    const [newComment, setNewComment] = useState("");
     const [editComment, setEditComment] = useState(null);
     const [boulderUpdated, setBoulderUpdated] = useState(false);
-    const [isImageClicked, setIsImageClicked] = useState(false)
+    const [isImageClicked, setIsImageClicked] = useState(false);
     const { area, boulderId } = useParams();
     const { user } = useUser();
     const [rating, setRating] = useState(boulder.rating || 0);
-    
+    const [ratingCount, setRatingCount] = useState({
+      1: 1,
+      2: 1,
+      3: 1,
+    });
+    const [mostRated, setMostRated] = useState(0);
+    const [totalRatings, setTotalRatings] = useState(0);
+    const [averageRating, setAverageRating] = useState(0);
   
+    useEffect(() => {
+      const sumRatings =
+        ratingCount[1] * 1 + ratingCount[2] * 2 + ratingCount[3] * 3;
+      const averageRating =
+        totalRatings > 0 ? sumRatings / totalRatings : 0;
+      setAverageRating(averageRating);
+      setMostRated(Math.floor(averageRating));
+    }, [ratingCount, totalRatings]);
 
-    //handle rating change
+
+    // Handle rating change
     function handleRatingChange(value) {
-      setRating(value)
+      setRating(value);
+      setRatingCount((prevCount) => ({
+        ...prevCount,
+        [value]: prevCount[value] + 1,
+      }));
+      setTotalRatings((prevTotal) => prevTotal + 1);
+    
       fetch(`/boulders/${boulderId}`, {
         method: "PATCH",
         headers: {
-        "Content-Type": "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           rating: value,
         }),
       })
-      .then((r) => {
-        if (!r.ok) {
-          throw new Error("Failed to update boulder rating.")
-        }
-      })
-      .catch((error) => console.log(error))
+        .then((r) => {
+          if (!r.ok) {
+            throw new Error("Failed to update boulder rating.");
+          }
+        })
+        .then(() => {
+          // Update the mostRated state based on the updated ratingCount
+          const maxRatingCount = Math.max(...Object.values(ratingCount));
+          const maxRated = Object.keys(ratingCount).find(
+            (key) => ratingCount[key] === maxRatingCount
+          );
+          setMostRated(parseInt(maxRated));
+        })
+        .catch((error) => console.log(error));
     }
+    
 
 
 
-    //load boulder info on page launch
+
+
+
     useEffect(() => {
       fetch(`/boulders/${area}/${boulderId}`)
         .then((r) => {
@@ -64,11 +96,15 @@ function BoulderPage( ) {
         .then((data) => {
           setBoulder(data);
           setRating(data.rating || 0);
+          setMostRated(data.rating || 0);
         })
         .catch((error) => console.log(error));
-    
 
-      //load comment info as well as user info
+
+
+
+        
+  
       fetch(`/comments/${boulderId}`)
         .then((r) => r.json())
         .then((data) => {
@@ -77,9 +113,7 @@ function BoulderPage( ) {
             canEdit: comment.user_id === user.id,
             canDelete: comment.user_id === user.id,
           }));
-    
-
-          // Add username to each comment object, good stuff here
+  
           const commentPromises = commentsWithPermissions.map((comment) =>
             fetch(`/users/${comment.user_id}`).then((r) => r.json())
           );
@@ -92,111 +126,102 @@ function BoulderPage( ) {
                 })
               );
               setComment(commentsWithUsernames);
-              
             })
             .catch((error) => console.log(error));
         })
         .catch((error) => console.log(error));
     }, [area, boulderId, user.id, boulderUpdated]);
-    
-
-    //this as well as 'boulderUpdated' help so I don't need to refresh upon submit when editing boulder.
+  
     const handleUpdateBoulder = () => {
       setBoulderUpdated(true);
     };
-
-
-    //edit comment
+  
     const handleEditComment = (comment) => {
-        
-        if (comment.user_id === user.id) {
+      if (comment.user_id === user.id) {
         setEditComment(comment);
         setNewComment(comment.comment);
-        }
+      }
     };
-
+  
     const handleCancelEdit = () => {
-        setEditComment(null);
-        setNewComment("");
+      setEditComment(null);
+      setNewComment("");
     };
-
+  
     const handleUpdateComment = (e) => {
-        e.preventDefault();
-        fetch(`/comments/${editComment.id}`, {
+      e.preventDefault();
+      fetch(`/comments/${editComment.id}`, {
         method: "PATCH",
         headers: {
-            "Content-Type": "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            comment: newComment,
+          comment: newComment,
         }),
-        })
+      })
         .then((r) => r.json())
         .then((updatedComment) => {
-            setComment((prevComments) =>
+          setComment((prevComments) =>
             prevComments.map((comment) =>
-                comment.id === updatedComment.id ? updatedComment : comment
+              comment.id === updatedComment.id ? updatedComment : comment
             )
-            );
-            setNewComment("");
-            setEditComment(null);
+          );
+          setNewComment("");
+          setEditComment(null);
         })
         .catch((error) => console.log(error));
     };
-
-
-    //submit commit
+  
     const handleSubmit = (e) => {
-        e.preventDefault();
-        fetch(`/comments/${boulderId}`, {
+      e.preventDefault();
+      fetch(`/comments/${boulderId}`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            comment: newComment,
-            user_id: user.id,
-            boulder_id: boulderId,
+          comment: newComment,
+          user_id: user.id,
+          boulder_id: boulderId,
         }),
-        })
-
+      })
         .then((r) => r.json())
         .then((data) => {
-        setComment([...comment, data]);
-        setNewComment("");
+          setComment([...comment, data]);
+          setNewComment("");
         })
         .catch((error) => console.log(error));
     };
-
-
-
-//handle deleting comments
-function handleDeleteComment(id) {
-const commentToDelete = comment.find((comm) => comm.id === id);
-
-if (commentToDelete.user_id !== user.id) {
-    console.log("You are not authorized to delete this comment.");
-    return;
-}
-
-fetch(`/comments/${id}`, {
-    method: "DELETE",
-})
-    .then((r) => {
-    if (r.ok) {
-        setComment((comments) => comments.filter((comm) => comm.id !== id));
-    } else {
-        throw new Error("Failed to delete comment.");
+  
+    function handleDeleteComment(id) {
+      const commentToDelete = comment.find((comm) => comm.id === id);
+  
+      if (commentToDelete.user_id !== user.id) {
+        console.log("You are not authorized to delete this comment.");
+        return;
+      }
+  
+      fetch(`/comments/${id}`, {
+        method: "DELETE",
+      })
+        .then((r) => {
+          if (r.ok) {
+            setComment((comments) => comments.filter((comm) => comm.id !== id));
+          } else {
+            throw new Error("Failed to delete comment.");
+          }
+        })
+        .catch((error) => console.log(error));
     }
-    })
-    .catch((error) => console.log(error));
-}
+  
+    const handleImageClick = () => {
+      setIsImageClicked(!isImageClicked);
+    }
+  
+   
+  
 
 
-//image enlarge
-const handleImageClick = () => {
-  setIsImageClicked(!isImageClicked)
-}
 
 
 
@@ -238,24 +263,34 @@ const handleImageClick = () => {
         
 
         <TextWrapper>
-        <h5><strong>Grade:</strong></h5>
-        <p >{boulder.grade}</p>
-        <h5><strong>Choss Rating:</strong></h5>
-        {boulder.rating && (
-        <p>
-        <span>
-        
-        {[0, 1, 2].map((value) => (
-          <Star
-            key={value}
-            filled={value < rating}
-            onClick={() => handleRatingChange(value + 1)}
-          />
-        ))}
-      </span>
+  <h5><strong>Grade:</strong></h5>
+  <p>{boulder.grade}</p>
+  <h5><strong>Choss Rating:</strong></h5>
 
-        </p>
-          )}
+  {boulder.rating && (
+    <p>
+  <span>
+    {[0, 1, 2].map((value) => (
+      <Star
+        key={value}
+        filled={value < mostRated}
+        onClick={() => handleRatingChange(value + 1)}
+        highlighted={mostRated === value + 1}
+      />
+    ))}
+  </span>
+  <p>
+    Rating count: 1: {ratingCount[1]}, 2: {ratingCount[2]}, 3: {ratingCount[3]}
+  </p>
+  <p>Average rating: {averageRating.toFixed(1)}</p>
+</p>
+
+  )}
+
+
+
+
+          
         <h5><strong>Description:</strong></h5>
         <p>{boulder.description}</p>
         </TextWrapper>
@@ -432,6 +467,7 @@ const TextWrapper = styled.div`
 
 
 export default BoulderPage;
+
 
 
 
