@@ -454,7 +454,9 @@ const EnlargedImage = styled.img`
   z-index: 9999;
   width: 500px; /* Adjust the width to fit your needs */
   height: auto; /* Adjust the height to fit your needs */
+  border: 1px solid black; /* Add the border style */
 `;
+
 
 
 
@@ -471,6 +473,8 @@ const TextWrapper = styled.div`
   border: 1px solid black;
   box-shadow: 0 0 10px rgba(0,0,0, .7);
 `;
+
+
 
 
 
