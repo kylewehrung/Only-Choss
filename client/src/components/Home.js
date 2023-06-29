@@ -36,56 +36,72 @@ function Home() {
 
 
   const uniqueStates = [...new Set(boulderLocations.map((location) => location.state))];
-
+  // Extract unique states from boulderLocations by mapping over the locations and collecting their states,
+  // then converting the array to a Set to remove duplicates, and finally spreading it back into an array.
+  
   return (
-    
-   <StyledBox className="mt-5 basic">
-   
+    <StyledBox className="mt-5 basic">
+      {/* Render a styled box component */}
       <OverlayTrigger trigger="click" placement="right" overlay={popover}>
+        {/* Render an overlay trigger component with a popover */}
         <StyledPopoverButton variant="success">What is Only Choss?</StyledPopoverButton>
+        {/* Render a styled button as the popover trigger */}
       </OverlayTrigger>
       <MDBDropdown style={{ marginTop: '75px' }}>
-
-
+        {/* Render an MDB dropdown component */}
         <MDBDropdownToggle>Select Location</MDBDropdownToggle>
+        {/* Render the dropdown toggle button */}
         <MDBDropdownMenu>
+          {/* Render the dropdown menu */}
           {uniqueStates.map((state) => (
+            // Iterate over the unique states and generate a dropdown item for each state
             <MDBDropdownItem key={state}>
+              {/* Render a dropdown item with the state as the key */}
               <MDBDropdownLink href="#">{state} &raquo;</MDBDropdownLink>
+              {/* Render a dropdown link with the state name */}
               <ul className="dropdown-menu dropdown-submenu">
-              {[...new Set(boulderLocations.filter(loc => loc.state === state).map(loc => loc.region))].map((region) => (
-                <MDBDropdownItem key={region}>
+                {/* Render a nested dropdown menu */}
+                {[...new Set(boulderLocations.filter(loc => loc.state === state).map(loc => loc.region))].map((region) => (
+                  // Filter boulderLocations based on the current state and collect unique regions
+                  <MDBDropdownItem key={region}>
+                    {/* Render a dropdown item with the region as the key */}
                     <MDBDropdownLink href="#">{region} &raquo;</MDBDropdownLink>
+                    {/* Render a dropdown link with the region name */}
                     <ul className="dropdown-menu dropdown-submenu">
-                    {boulderLocations
-                        .filter(
-                        (loc) =>
-                            loc.state === state && loc.region === region
-                        )
+                      {/* Render a nested dropdown menu */}
+                      {boulderLocations
+                        .filter((loc) => loc.state === state && loc.region === region)
+                        // Filter boulderLocations based on the current state and region
                         .filter((loc, index, self) => self.findIndex(l => l.area === loc.area) === index) 
+                        // Filter out duplicate areas within the same state and region
                         .map((loc) => (
-                        <MDBDropdownItem key={loc.area}>
+                          // Iterate over the filtered locations and generate a dropdown item for each area
+                          <MDBDropdownItem key={loc.area}>
+                            {/* Render a dropdown item with the area as the key */}
                             <MDBDropdownLink 
-                            onClick={() => {
+                              onClick={() => {
                                 console.log(`Clicked ${loc.area}`)
-                                history.push(`/boulders/${loc.area}`)}
-                            }
+                                history.push(`/boulders/${loc.area}`)
+                              }}
                             >
-                            {loc.area}</MDBDropdownLink>
-                        </MDBDropdownItem>
+                              {loc.area}
+                            </MDBDropdownLink>
+                            {/* Render a dropdown link with the area name */}
+                          </MDBDropdownItem>
                         ))}
                     </ul>
-                </MDBDropdownItem>
+                  </MDBDropdownItem>
                 ))}
-
               </ul>
             </MDBDropdownItem>
           ))}
         </MDBDropdownMenu>
       </MDBDropdown>
       <ChatBotHelper/>
+      {/* Render the ChatBotHelper component */}
     </StyledBox>
   );
+  
 }
 
 
