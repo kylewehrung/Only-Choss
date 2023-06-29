@@ -101,8 +101,8 @@ code {
 
   
   .dropdown-edit-form {
-    position: relative;
-    left: 515px;
+    position: absolute;
+    left: 1335px;
     top: -71px;
     z-index: 2;
   }
