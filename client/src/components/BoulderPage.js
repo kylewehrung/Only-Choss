@@ -18,43 +18,63 @@ import {
 
   function BoulderPage() {
     const [boulder, setBoulder] = useState({});
-    const [comment, setComment] = useState([]);
+    const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
     const [editComment, setEditComment] = useState(null);
     const [boulderUpdated, setBoulderUpdated] = useState(false);
     const [isImageClicked, setIsImageClicked] = useState(false);
     const { area, boulderId } = useParams();
     const { user } = useUser();
-    const [rating, setRating] = useState(boulder.rating || 0);
-    const [ratingCount, setRatingCount] = useState({
-      1: 1,
-      2: 1,
-      3: 1,
-    });
+    const [rating, setRating] = useState(0);
     const [mostRated, setMostRated] = useState(0);
-    const [totalRatings, setTotalRatings] = useState(0);
     const [averageRating, setAverageRating] = useState(0);
-
   
     useEffect(() => {
-      const sumRatings =
-        ratingCount[1] * 1 + ratingCount[2] * 2 + ratingCount[3] * 3;
-      const averageRating =
-        totalRatings > 0 ? sumRatings / totalRatings : 0;
-      setAverageRating(averageRating);
-      setMostRated(Math.floor(averageRating));
-    }, [ratingCount, totalRatings]);
-
-
-    // Handle rating change
-    function handleRatingChange(value) {
+      fetch(`/boulders/${area}/${boulderId}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to fetch boulder data.");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setBoulder(data);
+          setRating(data.rating || 0);
+          setMostRated(data.rating || 0);
+        })
+        .catch((error) => console.log(error));
+  
+      fetch(`/comments/${boulderId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          const commentsWithPermissions = data.map((comment) => ({
+            ...comment,
+            canEdit: comment.user_id === user.id,
+            canDelete: comment.user_id === user.id,
+          }));
+  
+          const commentPromises = commentsWithPermissions.map((comment) =>
+            fetch(`/users/${comment.user_id}`).then((response) => response.json())
+          );
+  
+          Promise.all(commentPromises)
+            .then((usernames) => {
+              const commentsWithUsernames = commentsWithPermissions.map(
+                (comment, index) => ({
+                  ...comment,
+                  username: usernames[index].username,
+                })
+              );
+              setComments(commentsWithUsernames);
+            })
+            .catch((error) => console.log(error));
+        })
+        .catch((error) => console.log(error));
+    }, [area, boulderId, user.id, boulderUpdated]);
+  
+    const handleRatingChange = (value) => {
       setRating(value);
-      setRatingCount((prevCount) => ({
-        ...prevCount,
-        [value]: prevCount[value] + 1,
-      }));
-      setTotalRatings((prevTotal) => prevTotal + 1);
-    
+  
       fetch(`/boulders/${boulderId}`, {
         method: "PATCH",
         headers: {
@@ -64,77 +84,17 @@ import {
           rating: value,
         }),
       })
-        .then((r) => {
-          if (!r.ok) {
+        .then((response) => {
+          if (!response.ok) {
             throw new Error("Failed to update boulder rating.");
           }
         })
         .then(() => {
-          // Update the mostRated state based on the updated ratingCount
-          const maxRatingCount = Math.max(...Object.values(ratingCount));
-          const maxRated = Object.keys(ratingCount).find(
-            (key) => ratingCount[key] === maxRatingCount
-          );
-          setMostRated(parseInt(maxRated));
+          setMostRated(parseInt(value));
         })
         .catch((error) => console.log(error));
-    }
-
-
-
-
-
-    useEffect(() => {
-      fetch(`/boulders/${area}/${boulderId}`)
-        .then((r) => {
-          if (!r.ok) {
-            throw new Error("Failed to fetch boulder data.");
-          }
-          return r.json();
-        })
-        .then((data) => {
-          setBoulder(data);
-          setRating(data.rating || 0);
-
-          setMostRated(data.rating || 0);
-        })
-        .catch((error) => console.log(error));
-
-
-
-
-
-        
+    };
   
-      fetch(`/comments/${boulderId}`)
-        .then((r) => r.json())
-        .then((data) => {
-          const commentsWithPermissions = data.map((comment) => ({
-            ...comment,
-            canEdit: comment.user_id === user.id,
-            canDelete: comment.user_id === user.id,
-          }));
-  
-          const commentPromises = commentsWithPermissions.map((comment) =>
-            fetch(`/users/${comment.user_id}`).then((r) => r.json())
-          );
-          Promise.all(commentPromises)
-            .then((usernames) => {
-              const commentsWithUsernames = commentsWithPermissions.map(
-                (comment, index) => ({
-                  ...comment,
-                  username: usernames[index].username,
-                })
-              );
-              setComment(commentsWithUsernames);
-            })
-            .catch((error) => console.log(error));
-        })
-        .catch((error) => console.log(error));
-
-    }, [area, boulderId, user.id, boulderUpdated]);
-  
-
     const handleUpdateBoulder = () => {
       setBoulderUpdated(true);
     };
@@ -162,9 +122,9 @@ import {
           comment: newComment,
         }),
       })
-        .then((r) => r.json())
+        .then((response) => response.json())
         .then((updatedComment) => {
-          setComment((prevComments) =>
+          setComments((prevComments) =>
             prevComments.map((comment) =>
               comment.id === updatedComment.id ? updatedComment : comment
             )
@@ -188,16 +148,16 @@ import {
           boulder_id: boulderId,
         }),
       })
-        .then((r) => r.json())
+        .then((response) => response.json())
         .then((data) => {
-          setComment([...comment, data]);
+          setComments([...comments, data]);
           setNewComment("");
         })
         .catch((error) => console.log(error));
     };
   
-    function handleDeleteComment(id) {
-      const commentToDelete = comment.find((comm) => comm.id === id);
+    const handleDeleteComment = (id) => {
+      const commentToDelete = comments.find((comm) => comm.id === id);
   
       if (commentToDelete.user_id !== user.id) {
         console.log("You are not authorized to delete this comment.");
@@ -207,204 +167,200 @@ import {
       fetch(`/comments/${id}`, {
         method: "DELETE",
       })
-        .then((r) => {
-          if (r.ok) {
-            setComment((comments) => comments.filter((comm) => comm.id !== id));
+        .then((response) => {
+          if (response.ok) {
+            setComments((prevComments) =>
+              prevComments.filter((comm) => comm.id !== id)
+            );
           } else {
             throw new Error("Failed to delete comment.");
           }
         })
         .catch((error) => console.log(error));
-    }
+    };
   
     const handleImageClick = () => {
       setIsImageClicked(!isImageClicked);
-    }
+    };
   
-   
+    return (
+      <StyledWrapper>
+        <Container>
+          {boulder ? (
+            <div className="dropdown-edit-form">
+              <Button
+                variant="outline"
+                type="button"
+                id="dropdownMenu2"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Edit Boulder
+              </Button>
+              <div className="dropdown-menu" aria-labelledby="dropdownMenu2">
+                <div>
+                  <EditChoss
+                    area={area}
+                    boulderId={boulderId}
+                    onUpdate={handleUpdateBoulder}
+                  />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p>Loading...</p>
+          )}
   
-
-
-
-
-
-
-
-  return (
-    
-    <StyledWrapper>
-      <Container>
-      {boulder ? (
-      <div class="dropdown-edit-form">
-        <Button variant="outline" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Edit Boulder
-        </Button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-          <div>
-            <EditChoss area={area} boulderId={boulderId} onUpdate={handleUpdateBoulder}/>
-          </div>
-        </div>
-      </div>
-      ) : (
-        <p>Loading...</p>
-      )}
-
-
-        <h1 className="h1">{boulder.name}</h1>
-        <ImageWrapper>
-        {isImageClicked && (
-          <EnlargedImage src={boulder.image} alt="boulders" 
-            onClick={handleImageClick}
-          />
-        )}
-        <Image 
-        src={boulder.image} 
-        alt="boulders" 
-        onClick={handleImageClick}
-        />
-        </ImageWrapper>
-        
-
-        <TextWrapper>
-
-  <h5><strong>Grade:</strong></h5>
-  <p>{boulder.grade}</p>
-  <h5><strong>Choss Rating:</strong></h5>
-
-  {boulder.rating && (
-    <p>
-
-  <span>
-    {[0, 1, 2].map((value) => (
-      <Star
-        key={value}
-
-        filled={value < mostRated}
-
-        onClick={() => handleRatingChange(value + 1)}
-        highlighted={mostRated === value + 1}
-      />
-    ))}
-  </span>
-  <p>
-    Rating count: 1: {ratingCount[1]}, 2: {ratingCount[2]}, 3: {ratingCount[3]}
-  </p>
-  <p>Average rating: {averageRating.toFixed(1)}</p>
-</p>
-
-
-  )}
-
-
-
-
-
-          
-        <h5><strong>Description:</strong></h5>
-        <p>{boulder.description}</p>
-        </TextWrapper>
-      </Container>
-
-
-      <Draggable
-        handle=".comment-handle"
-      >
-      <MDBContainer className="mt-5" style={{ maxWidth: "1100px" }} >
-      <div className="comment-handle"><strong>drag me</strong></div>
-        <MDBRow className="justify-content-center">
-          <MDBCol md="8" lg="6">
-            <MDBCard
-              className="shadow-0 border"
-              style={{ backgroundColor: "#abb0ce" }}
-            >
-              <MDBCardBody>
-                
-              {editComment ? (
-                <form onSubmit={handleUpdateComment}>
-                    <MDBInput
-                    wrapperClass="mb-4"
-                    placeholder="Type comment..."
-                    label="Edit comment"
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
+          <h1 className="h1">{boulder.name}</h1>
+          <ImageWrapper>
+            {isImageClicked && (
+              <EnlargedImage
+                src={boulder.image}
+                alt="boulders"
+                onClick={handleImageClick}
+              />
+            )}
+            <Image
+              src={boulder.image}
+              alt="boulders"
+              onClick={handleImageClick}
+            />
+          </ImageWrapper>
+  
+          <TextWrapper>
+            <h5><strong>Grade:</strong></h5>
+            <p>{boulder.grade}</p>
+            <h5><strong>Choss Rating:</strong></h5>
+            {boulder.rating && (
+              <p>
+                <span>
+                  {[0, 1, 2].map((value) => (
+                    <Star
+                      key={value}
+                      filled={value < rating}
+                      onClick={() => handleRatingChange(value + 1)}
+                      highlighted={mostRated === value + 1}
                     />
-                </form>
-                ) : (
-                <form onSubmit={handleSubmit}>
-                    <MDBInput
-                    wrapperClass="mb-4"
-                    placeholder="Type comment..."
-                    label="+ Add a comment"
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    />
-                    <button type="submit" className="btn btn-primary">
-                    Post Comment
-                    </button>
-                </form>
-                )}
-
-                {comment.map((comment) => (
-                    <MDBCard key={comment.id} className="mb-4">
-                        <MDBCardBody>
-                        {editComment && editComment.id === comment.id ? (
-                            <MDBInput
+                  ))}
+                </span>
+                <p>Average rating: {averageRating.toFixed(1)}</p>
+              </p>
+            )}
+            
+            <h5><strong>Description:</strong></h5>
+            <p>{boulder.description}</p>
+          </TextWrapper>
+        </Container>
+  
+        <Draggable
+          handle=".comment-handle"
+        >
+          <MDBContainer className="mt-5" style={{ maxWidth: "1100px" }} >
+            <div className="comment-handle"><strong>drag me</strong></div>
+            <MDBRow className="justify-content-center">
+              <MDBCol md="8" lg="6">
+                <MDBCard
+                  className="shadow-0 border"
+                  style={{ backgroundColor: "#abb0ce" }}
+                >
+                  <MDBCardBody>
+                    {editComment ? (
+                      <form onSubmit={handleUpdateComment}>
+                        <MDBInput
+                          wrapperClass="mb-4"
+                          placeholder="Type comment..."
+                          label="Edit comment"
+                          value={newComment}
+                          onChange={(e) => setNewComment(e.target.value)}
+                        />
+                      </form>
+                    ) : (
+                        <form onSubmit={handleSubmit}>
+                          <MDBInput
                             wrapperClass="mb-4"
                             placeholder="Type comment..."
-                            label="Edit comment"
+                            label="+ Add a comment"
                             value={newComment}
                             onChange={(e) => setNewComment(e.target.value)}
-                            
+                          />
+                          <button type="submit" className="btn btn-primary">
+                            Post Comment
+                      </button>
+                        </form>
+                      )}
+  
+                    {comments.map((comment) => (
+                      <MDBCard key={comment.id} className="mb-4">
+                        <MDBCardBody>
+                          {editComment && editComment.id === comment.id ? (
+                            <MDBInput
+                              wrapperClass="mb-4"
+                              placeholder="Type comment..."
+                              label="Edit comment"
+                              value={newComment}
+                              onChange={(e) => setNewComment(e.target.value)}
                             />
-                        ) : (
-                            <p>{comment.comment}</p>
-                        )}
-                        <div className="d-flex justify-content-between">
-                            {editComment && editComment.id === comment.id ? (
-                            <div className="d-flex flex-row align-items-center">
-                                <button type="submit" className="btn btn-primary me-2" onClick={handleUpdateComment}>
-                                Update
-                                </button>
-                                <button type="button" className="btn btn-danger" onClick={handleCancelEdit}>
-                                Cancel
-                                </button>
-                            </div>
-                            ) : (
-                                
-                               <div className="d-flex flex-row align-items-center">
-                                <div>
-                                 {comment.user_id === user.id ? (
-                                  <small>Posted by you</small>
-                                ) : (
-                                  <small>Posted by {comment.username}</small>
-                              )}
-                              </div>
-
-                                <button className="btn btn ms-2" onClick={() => handleDeleteComment(comment.id)}>Remove Comment</button>
-                                <button
-                                type="button"
-                                className="btn btn ms-2"
-                                onClick={() => handleEditComment(comment)}
-                                >
-                                Edit Comment
-                                </button>
-                            </div>
+                          ) : (
+                              <p>{comment.comment}</p>
                             )}
-                         </div>
-                         </MDBCardBody>
-                    </MDBCard>
+                          <div className="d-flex justify-content-between">
+                            {editComment && editComment.id === comment.id ? (
+                              <div className="d-flex flex-row align-items-center">
+                                <button
+                                  type="submit"
+                                  className="btn btn-primary me-2"
+                                  onClick={handleUpdateComment}
+                                >
+                                  Update
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn btn-danger"
+                                  onClick={handleCancelEdit}
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            ) : (
+                                <div className="d-flex flex-row align-items-center">
+                                  <div>
+                                    {comment.user_id === user.id ? (
+                                      <small>Posted by you</small>
+                                    ) : (
+                                        <small>Posted by {comment.username}</small>
+                                      )}
+                                  </div>
+  
+                                  <button
+                                    className="btn btn ms-2"
+                                    onClick={() => handleDeleteComment(comment.id)}
+                                  >
+                                    Remove Comment
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="btn btn ms-2"
+                                    onClick={() => handleEditComment(comment)}
+                                  >
+                                    Edit Comment
+                                  </button>
+                                </div>
+                              )}
+                          </div>
+                        </MDBCardBody>
+                      </MDBCard>
                     ))}
+  
                   </MDBCardBody>
-             </MDBCard>
-        </MDBCol>
-        </MDBRow>
-      </MDBContainer>
-    </Draggable>
-</StyledWrapper>
-);
-
-}
-                    
+                </MDBCard>
+              </MDBCol>
+            </MDBRow>
+          </MDBContainer>
+        </Draggable>
+      </StyledWrapper>
+    );
+  }
                     
     
     
