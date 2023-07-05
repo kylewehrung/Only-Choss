@@ -11,89 +11,80 @@ import BoulderList from "./BoulderList";
 import BoulderPage from "./BoulderPage";
 import AddChoss from "./AddChoss";
 
-
-
-
-
 function App() {
+  const [user, setUser] = useState(null);
+  const [showLogin, setShowLogin] = useState(true);
+  const history = useHistory();
 
-	const [user, setUser] = useState(null);
-	const [showLogin, setShowLogin] = useState(true);
-	const history = useHistory();
+  useEffect(() => {
+    fetch("/check_session").then((r) => {
+      if (r.ok) {
+        r.json().then((user) => setUser(user));
+      }
+    });
+  }, []);
 
-	useEffect(() => {
-		fetch("/check_session").then((r) => {
-			if (r.ok) {
-				r.json().then((user) => setUser(user));
-			}
-		});
-	}, []);
+  const handleLogin = (user) => {
+    setUser(user);
+    history.push("/");
+  };
 
-
-	const handleLogin = (user) => {
-		setUser(user);
-		history.push("/");
-	};
-
-
-
-	if (!user) return (
-		<Wrapper>
-			<Logo>Only Choss</Logo>
-			{showLogin ? (
-				<>
-					<LoginForm onLogin={handleLogin} />
-					<Divider />
-					<p>
-						Not an Only Choss member? &nbsp;
-						<Button color="secondary" onClick={() => setShowLogin(false)}>
-							Sign Up
-						</Button>
-					</p>
-				</>
-			) : (
-				<>
-					<SignUpForm onLogin={handleLogin} />
-					<Divider />
-					<p>
-						Already a Choss Member? &nbsp;
-						<Button color="secondary" onClick={() => setShowLogin(true)} >
-							Log In
-						</Button>
-					</p>
-				</>
-			)}
-		</Wrapper>
-	);
-
-
-
+  if (!user) {
+    return (
+      <Wrapper>
+        <Logo>Only Choss</Logo>
+        {showLogin ? (
+          <>
+            <LoginForm onLogin={handleLogin} />
+            <Divider />
+            <p>
+              Not an Only Choss member?&nbsp;
+              <Button color="secondary" onClick={() => setShowLogin(false)}>
+                Sign Up
+              </Button>
+            </p>
+          </>
+        ) : (
+          <>
+            <SignUpForm onLogin={handleLogin} />
+            <Divider />
+            <p>
+              Already a Choss Member?&nbsp;
+              <Button color="secondary" onClick={() => setShowLogin(true)}>
+                Log In
+              </Button>
+            </p>
+          </>
+        )}
+      </Wrapper>
+    );
+  }
 
   return (
-	<AppWrapper>
-	 <UserContext.Provider value={{ user, setUser }}>
-      
-		<NavBar user={user} setUser={setUser} />
-		<MainContainer>
-			<Switch>
-				<Route path="/boulders/:area/:boulderId/:add-choss">
-					<AddChoss />
-				</Route>
-				<Route path="/boulders/:area/:boulderId">
-					<BoulderPage />
-				</Route>
-				<Route path="/boulders/:area">
-					<BoulderList />
-				</Route>
-				<Route path="/">
-					<Home user={user} />
-				</Route>
-			</Switch>
-		</MainContainer>
-		</UserContext.Provider>
-	</AppWrapper>
+    <AppWrapper>
+      <UserContext.Provider value={{ user, setUser }}>
+        <NavBar user={user} setUser={setUser} />
+        <MainContainer>
+          <Switch>
+            <Route path="/boulders/:area/:boulderId/:add-choss">
+              <AddChoss />
+            </Route>
+            <Route path="/boulders/:area/:boulderId">
+              <BoulderPage />
+            </Route>
+            <Route path="/boulders/:area">
+              <BoulderList />
+            </Route>
+            <Route path="/">
+              <Home user={user} />
+            </Route>
+          </Switch>
+        </MainContainer>
+      </UserContext.Provider>
+    </AppWrapper>
   );
 }
+
 
 
 

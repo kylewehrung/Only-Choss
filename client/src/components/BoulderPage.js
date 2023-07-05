@@ -27,7 +27,7 @@ import {
     const { user } = useUser();
     const [rating, setRating] = useState(0);
     const [mostRated, setMostRated] = useState(0);
-    const [averageRating, setAverageRating] = useState(0);
+   
   
     useEffect(() => {
       fetch(`/boulders/${area}/${boulderId}`)
@@ -244,7 +244,6 @@ import {
                     />
                   ))}
                 </span>
-                <p>Average rating: {averageRating.toFixed(1)}</p>
               </p>
             )}
             
