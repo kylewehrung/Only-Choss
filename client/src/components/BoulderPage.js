@@ -183,6 +183,14 @@ import {
       setIsImageClicked(!isImageClicked);
     };
   
+
+
+
+
+
+
+
+    
     return (
       <StyledWrapper>
         <Container>
@@ -365,13 +373,26 @@ import {
     
     
     
-const StyledWrapper = styled.div`
-  background-image: url("https://i.pinimg.com/736x/65/36/67/653667e26bf65e8d42302cfad8da4769.jpg");
-  background-position: center;
-  background-size: cover;
+  const StyledWrapper = styled.div`
+  position: relative;
   width: 100%;
   height: 100vh;
+  overflow: auto;
+
+  &:before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("https://i.pinimg.com/736x/65/36/67/653667e26bf65e8d42302cfad8da4769.jpg");
+    background-position: center;
+    background-size: cover;
+    z-index: -1;
+  }
 `;
+
 
 
 const Container = styled.div`
@@ -407,9 +428,9 @@ const EnlargedImage = styled.img`
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 9999;
-  width: 500px; /* Adjust the width to fit your needs */
-  height: auto; /* Adjust the height to fit your needs */
-  border: 1px solid black; /* Add the border style */
+  width: 500px; 
+  height: auto; 
+  border: 1px solid black; 
 `;
 
 
