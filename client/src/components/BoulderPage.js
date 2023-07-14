@@ -204,7 +204,7 @@ import {
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                Edit Boulder
+                Edit Choss
               </Button>
               <div className="dropdown-menu" aria-labelledby="dropdownMenu2">
                 <div>
